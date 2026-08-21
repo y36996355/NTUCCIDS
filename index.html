@@ -74,6 +74,275 @@ body.logged-in>#loginView{display:none}
 .userbar .email{font-weight:700}
 .userbar button{padding:6px 10px;font-size:12px}
 
+
+:root{--bg:#f5f7fa;--card:#fff;--line:#e4e8ee;--text:#24313a;--muted:#6d7b86;--primary:#1f5f8b;--primary-dark:#17496a}
+body{background:var(--bg);color:var(--text)}
+header{background:linear-gradient(135deg,#1f4e78,#2f6f9f);padding:22px 30px}
+header h1{font-size:26px;letter-spacing:.2px}
+header p{font-size:13px;opacity:.88}
+.userbar{margin-top:12px;padding-top:10px;border-top:1px solid #ffffff2e}
+.container{max-width:1500px;margin:26px auto;padding:0 22px}
+.toolbar{padding:18px 20px;border-radius:14px}
+.card{border-radius:14px}
+.btn-primary{background:var(--primary);box-shadow:0 2px 5px #0001}
+.btn-primary:hover{background:var(--primary-dark)}
+.btn-secondary{background:#eef2f5;color:#33434f}
+.summary{padding:16px 18px}.summary strong{font-size:16px}
+table{min-width:1100px}
+th{background:#f3f6f9;color:#43515b;font-size:13px}
+td{padding:13px 11px}
+tr:hover td{background:#fafcfe}
+.link-btn{text-decoration:none;font-weight:700}
+.status-pill{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:999px;font-size:12px;font-weight:700;white-space:nowrap}
+.status-pill::before{content:"";width:7px;height:7px;border-radius:50%;display:inline-block}
+.status-notstarted{background:#eef0f2;color:#69747c}.status-notstarted::before{background:#8d969d}
+.status-active{background:#e3f4e9;color:#24713e}.status-active::before{background:#2d9a55}
+.status-closed{background:#fde8e6;color:#a43a30}.status-closed::before{background:#d34f43}
+.dashboard-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
+.stat-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 18px;box-shadow:0 2px 8px #0000000a;cursor:pointer;transition:.15s}
+.stat-card:hover{border-color:#b9c9d6;transform:translateY(-1px)}
+.stat-label{font-size:12px;color:var(--muted);margin-bottom:6px;font-weight:700}
+.stat-value{font-size:28px;font-weight:800;color:#263945}
+.stat-sub{font-size:12px;color:#8a969f;margin-top:4px}
+.toolbar-main{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.search-wrap{flex:1 1 520px}
+.search-wrap input{font-size:15px;padding:13px 14px;border-radius:9px}
+.toolbar-actions{display:flex;gap:8px;flex-wrap:wrap}
+.detail-body{padding:24px}
+.detail-grid{grid-template-columns:repeat(4,1fr);gap:14px}
+.detail-item{border:1px solid var(--line);border-radius:12px;padding:14px;background:#fbfcfd}
+.detail-section{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px;margin-top:16px}
+.detail-section h3{border:0;margin-bottom:10px}
+.detail-text{border:0;background:#f8fafb;padding:14px}
+.modal-box{border-radius:16px}
+.modal-head{padding:18px 22px;background:#f8fafb;border-radius:16px 16px 0 0}
+.modal-body{padding:22px}.modal-foot{padding:16px 22px}
+.field label{font-size:12px;color:#4d5c66}
+input,select,textarea{border-radius:8px}
+.iwrs-row,.location-row{padding:10px;border:1px solid var(--line);border-radius:10px;background:#fafcfd}
+.tools-wrap{position:relative}
+.top-tools{display:none;position:absolute;right:0;top:44px;background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 8px 24px #0002;padding:8px;z-index:5;min-width:210px}
+.top-tools.show{display:block}
+.top-tools button{width:100%;text-align:left;background:#fff}
+.top-tools button:hover{background:#f4f7f9}
+@media(max-width:1000px){.dashboard-cards{grid-template-columns:repeat(2,1fr)}.detail-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:650px){.dashboard-cards{grid-template-columns:1fr}.detail-grid{grid-template-columns:1fr}.container{padding:0 12px}.toolbar-actions{width:100%}}
+
+
+/* ===== Split workspace layout ===== */
+.workspace-header{
+  min-height:132px;
+  padding:24px 30px;
+  background:linear-gradient(100deg,#082d5d 0%,#0b3f7d 55%,#145ca1 100%);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 2px 8px rgba(0,0,0,.14);
+}
+.workspace-header-copy{position:relative;z-index:3}
+.workspace-header h1{margin:0;font-size:31px;letter-spacing:.5px}
+.workspace-header p{margin:7px 0 0;font-size:15px;opacity:.9}
+.workspace-user{position:relative;z-index:4;display:flex;align-items:center;gap:8px;font-size:12px}
+.workspace-user .email{font-weight:700}
+.workspace-header-art{position:absolute;right:0;top:0;width:48%;height:100%;opacity:.56;pointer-events:none}
+.med-hex{position:absolute;width:72px;height:42px;border:2px solid rgba(255,255,255,.46);transform:rotate(30deg)}
+.med-hex::before,.med-hex::after{content:"";position:absolute;inset:-2px;border:2px solid rgba(255,255,255,.22);transform:rotate(60deg)}
+.med-hex.h1{right:130px;top:35px}.med-hex.h2{right:300px;top:67px;width:48px;height:28px;opacity:.7}
+.med-cross{position:absolute;color:rgba(255,255,255,.48);font-size:38px;font-weight:300}
+.med-cross.c1{right:50px;top:56px}.med-cross.c2{right:390px;top:22px;font-size:28px}
+.med-node{position:absolute;width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.6)}
+.n1{right:470px;top:39px}.n2{right:400px;top:75px}.n3{right:340px;top:42px}.n4{right:245px;top:85px}
+.med-line{position:absolute;height:1px;background:rgba(255,255,255,.30);transform-origin:left center}
+.l1{right:405px;top:48px;width:78px;transform:rotate(28deg)}
+.l2{right:337px;top:70px;width:72px;transform:rotate(-24deg)}
+.l3{right:250px;top:83px;width:98px;transform:rotate(4deg)}
+
+.container{max-width:1680px}
+.workspace-grid{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(430px,.92fr);gap:18px;align-items:start}
+.workspace-left{display:grid;grid-template-rows:auto auto;gap:18px;min-width:0}
+.workspace-right{min-width:0;position:sticky;top:14px}
+.workspace-list-card,.workspace-editor,.workspace-detail{border:1px solid #e2e7ec;box-shadow:0 3px 12px rgba(0,0,0,.045);border-radius:12px;background:#fff}
+.workspace-list-card .table-wrap{max-height:410px;overflow:auto}
+.workspace-list-card table{min-width:980px}
+.workspace-editor{overflow:hidden}
+.workspace-editor .modal-head{border-radius:0}
+.workspace-editor .modal-body{padding:18px}
+.workspace-editor .modal-foot{padding:14px 18px}
+.workspace-editor .form-grid{grid-template-columns:1fr 1fr;gap:12px}
+.workspace-editor textarea{min-height:86px}
+.workspace-detail{display:block!important;min-height:720px;overflow:hidden}
+.workspace-detail .detail-head{padding:16px 18px}
+.workspace-detail .detail-body{padding:18px}
+.workspace-detail .detail-grid{grid-template-columns:1fr 1fr}
+.workspace-detail .detail-section{margin-top:14px}
+.workspace-detail .detail-text{min-height:64px}
+.detail-placeholder{padding:50px 24px;text-align:center;color:#7f8c96}
+.detail-placeholder strong{display:block;color:#37536b;font-size:18px;margin-bottom:8px}
+#detailView.detail-empty .detail-body{display:none}
+#detailView.detail-empty::after{content:"請從左上方試驗案清單點選「查看」，案件詳細資料會顯示於此。";display:block;padding:80px 32px;text-align:center;color:#7b8790;line-height:1.8}
+
+@media(max-width:1180px){
+  .workspace-grid{grid-template-columns:1fr}
+  .workspace-right{position:static}
+  .workspace-detail{min-height:auto}
+}
+@media(max-width:700px){
+  .workspace-header{min-height:150px;padding:20px 16px;align-items:flex-start}
+  .workspace-header-art{width:70%}
+  .workspace-user{position:absolute;right:14px;top:14px}
+  .workspace-editor .form-grid,.workspace-detail .detail-grid{grid-template-columns:1fr}
+}
+
+
+/* ===== Two-panel workspace: list + detail only ===== */
+.workspace-grid{
+  display:grid;
+  grid-template-columns:minmax(0,1.12fr) minmax(430px,.88fr);
+  gap:20px;
+  align-items:start;
+}
+.workspace-left{
+  display:block;
+  min-width:0;
+}
+.workspace-right{
+  min-width:0;
+  position:sticky;
+  top:14px;
+}
+.workspace-list-card{
+  border:1px solid #e2e7ec;
+  box-shadow:0 3px 12px rgba(0,0,0,.045);
+  border-radius:12px;
+  background:#fff;
+}
+.workspace-list-card .table-wrap{
+  max-height:650px;
+  overflow:auto;
+}
+.workspace-detail{
+  display:block!important;
+  min-height:720px;
+  overflow:hidden;
+  border:1px solid #e2e7ec;
+  box-shadow:0 3px 12px rgba(0,0,0,.045);
+  border-radius:12px;
+  background:#fff;
+}
+/* Old editor-panel styles no longer used */
+.workspace-editor{display:none!important}
+@media(max-width:1180px){
+  .workspace-grid{grid-template-columns:1fr}
+  .workspace-right{position:static}
+  .workspace-detail{min-height:auto}
+}
+
+
+/* ===== Compact list + bottom-left statistics ===== */
+.workspace-left{display:flex!important;flex-direction:column;gap:12px}
+.workspace-list-card .table-wrap{
+  max-height:none!important;
+  overflow:visible!important;
+}
+.workspace-list-card table{
+  width:100%!important;
+  min-width:0!important;
+  table-layout:fixed;
+  font-size:12px;
+}
+.workspace-list-card th,
+.workspace-list-card td{
+  padding:8px 7px!important;
+  line-height:1.35;
+  word-break:break-word;
+}
+.workspace-list-card th:nth-child(1),
+.workspace-list-card td:nth-child(1){width:12%}
+.workspace-list-card th:nth-child(2),
+.workspace-list-card td:nth-child(2){width:17%}
+.workspace-list-card th:nth-child(3),
+.workspace-list-card td:nth-child(3){width:17%}
+.workspace-list-card th:nth-child(4),
+.workspace-list-card td:nth-child(4){width:10%}
+.workspace-list-card th:nth-child(5),
+.workspace-list-card td:nth-child(5){width:18%}
+.workspace-list-card th:nth-child(6),
+.workspace-list-card td:nth-child(6){width:14%}
+.workspace-list-card th:nth-child(7),
+.workspace-list-card td:nth-child(7){width:12%}
+.workspace-list-card .link-btn{
+  padding:2px 3px!important;
+  font-size:11px!important;
+  white-space:nowrap;
+}
+.workspace-list-card .status-pill{
+  padding:3px 7px!important;
+  font-size:11px!important;
+}
+.compact-stats{
+  display:grid!important;
+  grid-template-columns:repeat(4,max-content)!important;
+  justify-content:start;
+  gap:8px!important;
+  margin:0!important;
+}
+.compact-stats .stat-card{
+  min-width:92px;
+  padding:8px 10px!important;
+  border-radius:8px!important;
+  box-shadow:none!important;
+}
+.compact-stats .stat-label{
+  font-size:11px!important;
+  margin-bottom:2px!important;
+}
+.compact-stats .stat-value{
+  font-size:18px!important;
+  line-height:1.1;
+}
+.compact-stats .stat-sub{
+  display:none!important;
+}
+@media(max-width:1250px){
+  .workspace-list-card table{font-size:11px}
+  .workspace-list-card th,.workspace-list-card td{padding:7px 5px!important}
+}
+@media(max-width:900px){
+  .compact-stats{grid-template-columns:repeat(2,max-content)!important}
+}
+
+
+.pagination-bar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:10px 12px;
+  border-top:1px solid #e5e9ed;
+  background:#fafbfd;
+  font-size:12px;
+}
+.page-info{color:#71808b}
+.page-controls{display:flex;align-items:center;gap:8px}
+.page-btn{
+  padding:5px 9px;
+  border:1px solid #cbd4dc;
+  border-radius:6px;
+  background:#fff;
+  color:#315b7e;
+  font-size:11px;
+  cursor:pointer;
+}
+.page-btn:hover:not(:disabled){background:#eef5fb;border-color:#8eabc2}
+.page-btn:disabled{opacity:.38;cursor:default}
+.page-number{min-width:76px;text-align:center;color:#4f5d67;font-weight:700}
+@media(max-width:600px){
+  .pagination-bar{align-items:flex-start;flex-direction:column}
+}
+
 </style>
 </head>
 <body class="logged-out">
@@ -102,27 +371,51 @@ body.logged-in>#loginView{display:none}
   </div>
 </div>
 
-<header>
-  <h1>試驗案資訊資料庫</h1>
-  <p>正式使用版｜Supabase Auth｜共用資料庫</p>
-  <div class="userbar">
+
+<header class="workspace-header">
+  <div class="workspace-header-copy">
+    <h1>試驗案資訊資料庫</h1>
+    <p>Clinical Trial Pharmacy Database</p>
+  </div>
+  <div class="workspace-header-art" aria-hidden="true">
+    <div class="med-hex h1"></div>
+    <div class="med-hex h2"></div>
+    <div class="med-cross c1">+</div>
+    <div class="med-cross c2">+</div>
+    <div class="med-node n1"></div><div class="med-node n2"></div>
+    <div class="med-node n3"></div><div class="med-node n4"></div>
+    <div class="med-line l1"></div><div class="med-line l2"></div><div class="med-line l3"></div>
+  </div>
+  <div class="workspace-user">
     <span>已登入：</span><span id="signedInEmail" class="email"></span>
     <button class="btn-secondary" onclick="signOut()">登出</button>
   </div>
 </header>
 
+
 <div class="container">
 <div id="banner" class="banner"></div>
 
+
 <div id="listView">
+  
   <div class="toolbar">
-    <div class="filters">
-      <input id="keyword" placeholder="模糊搜尋：試驗案編號、Protocol No.、主要試驗用藥、IWRS、注意事項、交互作用…">
-      <button class="btn-secondary" onclick="loadAll()">重新整理</button>
-      <button class="btn-secondary" onclick="exportTrialCsv()">匯出試驗案 CSV</button>
-      <button class="btn-secondary" onclick="exportFullBackup()">完整備份 JSON</button>
-      <button class="btn-secondary" onclick="openIwrsMaintenance()">維護 IWRS</button>
-      <button class="btn-primary" onclick="openModal()">＋ 新增試驗案</button>
+    <div class="toolbar-main">
+      <div class="search-wrap">
+        <input id="keyword" placeholder="搜尋 Protocol、試驗案編號、主要試驗用藥、IWRS、儲位、注意事項…">
+      </div>
+      <div class="toolbar-actions">
+        <button class="btn-primary" onclick="openModal()">＋ 新增試驗案</button>
+        <button class="btn-secondary" onclick="openIwrsMaintenance()">維護 IWRS</button>
+        <div class="tools-wrap">
+          <button class="btn-secondary" onclick="toggleTools()">工具 ▾</button>
+          <div id="toolsMenu" class="top-tools">
+            <button onclick="loadAll();toggleTools(false)">重新整理</button>
+            <button onclick="exportTrialCsv();toggleTools(false)">匯出試驗案 CSV</button>
+            <button onclick="exportFullBackup();toggleTools(false)">完整備份 JSON</button>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="notice statusbar">
       <span>資料來源：Supabase</span>
@@ -131,7 +424,10 @@ body.logged-in>#loginView{display:none}
     </div>
   </div>
 
-  <div class="card">
+  
+  <div class="workspace-grid">
+    <div class="workspace-left">
+      <div class="card workspace-list-card">
     <div class="summary"><strong>試驗案清單</strong><span id="count"></span></div>
     <div class="table-wrap">
       <table>
@@ -139,13 +435,22 @@ body.logged-in>#loginView{display:none}
         <tbody id="trialBody"></tbody>
       </table>
     </div>
+<div id="pagination" class="pagination-bar"></div>
   </div>
-</div>
+    <div class="dashboard-cards compact-stats">
+    <div class="stat-card" onclick="setStatusFilter('')"><div class="stat-label">全部試驗案</div><div id="statAll" class="stat-value">0</div><div class="stat-sub">All trials</div></div>
+    <div class="stat-card" onclick="setStatusFilter('進行中')"><div class="stat-label">進行中</div><div id="statActive" class="stat-value">0</div><div class="stat-sub">Active</div></div>
+    <div class="stat-card" onclick="setStatusFilter('未進行')"><div class="stat-label">未進行</div><div id="statNotStarted" class="stat-value">0</div><div class="stat-sub">Not started</div></div>
+    <div class="stat-card" onclick="setStatusFilter('結案')"><div class="stat-label">結案</div><div id="statClosed" class="stat-value">0</div><div class="stat-sub">Closed</div></div>
+  </div>
 
-<div id="detailView" class="card detail">
+  
+</div>
+    <div class="workspace-right">
+      <div id="detailView" class="card workspace-detail">
   <div class="detail-head">
-    <h2 id="detailTitle">試驗案詳細資料</h2>
-    <div><button class="btn-secondary" onclick="editFromDetail()">編輯</button><button class="btn-secondary" onclick="closeDetail()">返回清單</button></div>
+    <h2 id="detailTitle">案件詳細資料</h2>
+    <div><button class="btn-secondary" onclick="editFromDetail()">編輯此案件</button></div>
   </div>
   <div class="detail-body">
     <div class="detail-grid">
@@ -159,6 +464,10 @@ body.logged-in>#loginView{display:none}
   </div>
 </div>
 </div>
+    </div>
+  </div>
+</div>
+
 
 <div id="iwrsView" class="card detail">
   <div class="detail-head">
@@ -221,6 +530,7 @@ body.logged-in>#loginView{display:none}
   <div class="modal-foot"><button class="btn-secondary" onclick="closeModal()">取消</button><button id="saveBtn" class="btn-primary" onclick="saveTrial()">儲存</button></div>
 </div></div>
 
+
 <div class="modal" id="iwrsModal">
   <div class="modal-box" style="max-width:700px">
     <div class="modal-head">
@@ -269,6 +579,9 @@ let trials=[];
 let iwrsOptions=[];
 let iwrsAccounts=[];
 let currentDetailId=null;
+let statusFilter='';
+let currentPage=1;
+const pageSize=15;
 let authSession=null;
 
 function $(id){return document.getElementById(id)}
@@ -507,28 +820,99 @@ function exportFullBackup(){
  showBanner("完整 JSON 備份已匯出。","ok");
 }
 
+
+function setStatusFilter(status){statusFilter=status||"";currentPage=1;render();}
+function toggleTools(force){
+ const m=$("toolsMenu");
+ const show=typeof force==="boolean"?force:!m.classList.contains("show");
+ m.classList.toggle("show",show);
+}
+document.addEventListener("click",e=>{
+ if(!e.target.closest(".tools-wrap") && $("toolsMenu"))$("toolsMenu").classList.remove("show");
+});
+
+
+function changePage(page){
+  currentPage=page;
+  render();
+}
+
+function renderPagination(totalRows,totalPages){
+  const el=$("pagination");
+  if(!el)return;
+
+  if(totalRows===0){
+    el.innerHTML="";
+    return;
+  }
+
+  const from=(currentPage-1)*pageSize+1;
+  const to=Math.min(currentPage*pageSize,totalRows);
+
+  el.innerHTML=
+    '<span class="page-info">顯示 '+from+'–'+to+'，共 '+totalRows+' 案</span>'+
+    '<div class="page-controls">'+
+      '<button class="page-btn" '+(currentPage<=1?'disabled':'')+
+        ' onclick="changePage('+(currentPage-1)+')">‹ 上一頁</button>'+
+      '<span class="page-number">第 '+currentPage+' / '+totalPages+' 頁</span>'+
+      '<button class="page-btn" '+(currentPage>=totalPages?'disabled':'')+
+        ' onclick="changePage('+(currentPage+1)+')">下一頁 ›</button>'+
+    '</div>';
+}
+
 function render(){
  const q=$("keyword").value.trim().toLowerCase();
+
  const rows=trials.filter(t=>{
    const loc=(t.locations||[]).map(x=>(x.storage_type||"")+" "+(x.location||"")).join(" ");
    const iw=(t.iwrs||[]).map(x=>(x.iwrs_name||"")+" "+(x.login_id||"")).join(" ");
-   return !q||[t.serial_no,t.protocol_no,t.main_drug,t.trial_status,t.dispensing,t.ddi,loc,iw].join(" ").toLowerCase().includes(q);
+   const matchesText=!q||[t.serial_no,t.protocol_no,t.main_drug,t.trial_status,t.dispensing,t.ddi,loc,iw].join(" ").toLowerCase().includes(q);
+   const matchesStatus=!statusFilter||t.trial_status===statusFilter;
+   return matchesText&&matchesStatus;
  });
+
+ $("statAll").textContent=trials.length;
+ $("statActive").textContent=trials.filter(t=>t.trial_status==="進行中").length;
+ $("statNotStarted").textContent=trials.filter(t=>(t.trial_status||"未進行")==="未進行").length;
+ $("statClosed").textContent=trials.filter(t=>t.trial_status==="結案").length;
+
+ const totalPages=Math.max(1,Math.ceil(rows.length/pageSize));
+ if(currentPage>totalPages)currentPage=totalPages;
+ if(currentPage<1)currentPage=1;
+
+ const start=(currentPage-1)*pageSize;
+ const pageRows=rows.slice(start,start+pageSize);
+
  $("count").textContent="共 "+rows.length+" / "+trials.length+" 件";
- if(!rows.length){$("trialBody").innerHTML='<tr><td colspan="7" class="empty">目前沒有符合條件的試驗案</td></tr>';return}
- $("trialBody").innerHTML=rows.map(t=>{
+
+ if(!pageRows.length){
+   $("trialBody").innerHTML='<tr><td colspan="7" class="empty">目前沒有符合條件的試驗案</td></tr>';
+   renderPagination(0,1);
+   return;
+ }
+
+ $("trialBody").innerHTML=pageRows.map(t=>{
    const locs=(t.locations||[]).map(x=>esc(x.storage_type||"")+"｜"+esc(x.location||"")).join("<br>")||"—";
    const iw=(t.iwrs||[]).map(x=>esc(x.iwrs_name||"")).join("<br>")||"—";
    const status=t.trial_status||"未進行";
    const statusClass=status==="進行中"?"status-active":status==="結案"?"status-closed":"status-notstarted";
-   return '<tr><td><strong>'+esc(t.serial_no||"—")+'</strong></td><td>'+esc(t.protocol_no||"—")+'</td>'+
-   '<td>'+esc(t.main_drug||"—")+'</td>'+
-   '<td><span class="trial-status '+statusClass+'">'+esc(status)+'</span></td>'+
-   '<td>'+locs+'</td><td>'+iw+'</td><td>'+
-   '<button class="link-btn" onclick="showDetail('+t.trial_id+')">查看</button>'+
-   '<button class="link-btn" onclick="editTrial('+t.trial_id+')">編輯</button>'+
-   '<button class="link-btn" onclick="deleteTrial('+t.trial_id+')">刪除</button></td></tr>';
+
+   return '<tr>'+
+     '<td><strong>'+esc(t.serial_no||"—")+'</strong></td>'+
+     '<td>'+esc(t.protocol_no||"—")+'</td>'+
+     '<td>'+esc(t.main_drug||"—")+'</td>'+
+     '<td><span class="status-pill '+statusClass+'">'+esc(status)+'</span></td>'+
+     '<td>'+locs+'</td>'+
+     '<td>'+iw+'</td>'+
+     '<td>'+
+       '<button class="link-btn" onclick="showDetail('+t.trial_id+')">查看</button>'+
+       '<button class="link-btn" onclick="editTrial('+t.trial_id+')">編輯</button>'+
+       '<button class="link-btn" onclick="deleteTrial('+t.trial_id+')">刪除</button>'+
+     '</td>'+
+   '</tr>';
  }).join("");
+
+ renderPagination(rows.length,totalPages);
 }
 
 function addLocationRow(type="",location=""){
@@ -757,13 +1141,13 @@ async function saveTrial(){
   }
   if(locations.length)await api("/trial_locations",{method:"POST",headers:{"Prefer":"return=minimal"},body:JSON.stringify(locations.map(x=>({trial_id,...x})))});
   if(iwrsRows.length)await api("/trial_iwrs",{method:"POST",headers:{"Prefer":"return=minimal"},body:JSON.stringify(iwrsRows.map(x=>({trial_id,account_id:x.account_id})))});
-  closeModal();await loadAll();if(currentDetailId===trial_id)showDetail(trial_id);showBanner("資料已成功儲存到 Supabase。","ok");
+  closeModal();await loadAll();showDetail(trial_id);showBanner("資料已成功儲存到 Supabase。","ok");
  }catch(e){showBanner("儲存失敗："+e.message,"error")}finally{setBusy(false)}
 }
 
 function showDetail(id){
- const t=trials.find(x=>x.trial_id===id);if(!t)return;currentDetailId=id;$("listView").style.display="none";$("detailView").classList.add("show");
- $("detailTitle").textContent=(t.serial_no||t.protocol_no||"試驗案")+"｜詳細資料";$("dSerial").textContent=t.serial_no||"—";$("dProtocol").textContent=t.protocol_no||"—";$("dMainDrug").textContent=t.main_drug||"—";const ds=t.trial_status||"未進行";const dc=ds==="進行中"?"status-active":ds==="結案"?"status-closed":"status-notstarted";$("dTrialStatus").innerHTML='<span class="trial-status '+dc+'">'+esc(ds)+"</span>";
+ const t=trials.find(x=>x.trial_id===id);if(!t)return;currentDetailId=id;$("detailView").classList.remove("detail-empty");
+ $("detailTitle").textContent=(t.serial_no||t.protocol_no||"試驗案")+"｜詳細資料";$("dSerial").textContent=t.serial_no||"—";$("dProtocol").textContent=t.protocol_no||"—";$("dMainDrug").textContent=t.main_drug||"—";const ds=t.trial_status||"未進行";const dc=ds==="進行中"?"status-active":ds==="結案"?"status-closed":"status-notstarted";$("dTrialStatus").innerHTML='<span class="status-pill '+dc+'">'+esc(ds)+"</span>";
  const loc=t.locations||[];$("dLocations").innerHTML=loc.length?'<div class="grid-display location"><div class="lh">儲存方式</div><div class="lh">儲位</div>'+loc.map(x=>'<div>'+esc(x.storage_type||"—")+'</div><div>'+esc(x.location||"—")+'</div>').join("")+'</div>':"目前尚未設定藥品儲位。";
  const iw=t.iwrs||[];$("dIwrs").innerHTML=iw.length?'<div class="grid-display iwrs"><div class="lh">IWRS</div><div class="lh">Login ID</div><div class="lh">Password</div><div class="lh">網址</div>'+iw.map(x=>{
  const safeUrl=(x.iwrs_url||"").trim();
@@ -772,7 +1156,7 @@ function showDetail(id){
 }).join("")+'</div>':"目前尚未設定 IWRS。";
  $("dDispensing").textContent=t.dispensing||"目前尚未輸入注意事項。";$("dDdi").textContent=t.ddi||"目前尚未輸入藥品交互作用。";
 }
-function closeDetail(){currentDetailId=null;$("detailView").classList.remove("show");$("listView").style.display="block";render()}
+function closeDetail(){currentDetailId=null;$("detailView").classList.add("detail-empty")}
 function editTrial(id){openModal(id)}function editFromDetail(){if(currentDetailId)openModal(currentDetailId)}
 
 async function deleteTrial(id){
@@ -785,7 +1169,7 @@ async function deleteTrial(id){
  }catch(e){showBanner("刪除失敗："+e.message,"error")}finally{setBusy(false)}
 }
 
-$("keyword").addEventListener("input",render);
+$("keyword").addEventListener("input",()=>{currentPage=1;render()});
 $("loginEmail").addEventListener("keydown",e=>{if(e.key==="Enter")signIn()});
 $("loginPassword").addEventListener("keydown",e=>{if(e.key==="Enter")signIn()});
 document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeModal();closeIwrsModal();closeAccountModal()}});
@@ -806,6 +1190,7 @@ async function restoreAuth(){
   }
 }
 restoreAuth();
+$("detailView").classList.add("detail-empty");
 </script>
 </body>
 </html>

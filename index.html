@@ -343,6 +343,27 @@ input,select,textarea{border-radius:8px}
   .pagination-bar{align-items:flex-start;flex-direction:column}
 }
 
+
+/* 藥品儲位：每個儲位各自一行，但單一儲位內容不斷句 */
+.workspace-list-card th:nth-child(5),
+.workspace-list-card td:nth-child(5){
+  width:22%!important;
+}
+.workspace-list-card th:nth-child(6),
+.workspace-list-card td:nth-child(6){
+  width:12%!important;
+}
+.workspace-list-card th:nth-child(7),
+.workspace-list-card td:nth-child(7){
+  width:10%!important;
+}
+.storage-line{
+  display:block;
+  white-space:nowrap;
+  word-break:keep-all;
+  overflow-wrap:normal;
+}
+
 </style>
 </head>
 <body class="logged-out">
@@ -892,7 +913,7 @@ function render(){
  }
 
  $("trialBody").innerHTML=pageRows.map(t=>{
-   const locs=(t.locations||[]).map(x=>esc(x.storage_type||"")+"｜"+esc(x.location||"")).join("<br>")||"—";
+   const locs=(t.locations||[]).map(x=>'<span class="storage-line">'+esc(x.storage_type||"")+"｜"+esc(x.location||"")+'</span>').join("")||"—";
    const iw=(t.iwrs||[]).map(x=>esc(x.iwrs_name||"")).join("<br>")||"—";
    const status=t.trial_status||"未進行";
    const statusClass=status==="進行中"?"status-active":status==="結案"?"status-closed":"status-notstarted";

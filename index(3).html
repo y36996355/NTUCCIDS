@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>試驗案資訊資料庫｜Supabase + IWRS</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:"Microsoft JhengHei","Noto Sans TC",Arial,sans-serif;background:#f4f6f8;color:#263238}
+header{background:#1f4e78;color:#fff;padding:18px 28px;box-shadow:0 2px 5px #0002}
+header h1{margin:0;font-size:24px} header p{margin:5px 0 0;opacity:.9;font-size:13px}
+.container{max-width:1400px;margin:22px auto;padding:0 18px}
+.toolbar,.card{background:#fff;border:1px solid #dce2e7;border-radius:10px;box-shadow:0 2px 8px #0000000b}
+.toolbar{padding:16px;margin-bottom:18px}
+.filters{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.filters input{flex:1 1 320px}.filters button{flex:0 0 auto}
+input,select,textarea{width:100%;padding:10px 11px;border:1px solid #cbd3da;border-radius:6px;font-size:14px;background:#fff}
+textarea{min-height:120px;resize:vertical;line-height:1.6}
+button{border:0;border-radius:6px;padding:10px 16px;font-size:14px;cursor:pointer}
+button:disabled{opacity:.55;cursor:not-allowed}
+.btn-primary{background:#1f6aa5;color:#fff}.btn-primary:hover{background:#185786}
+.btn-secondary{background:#e9eef2;color:#263238}.btn-danger{background:#c0392b;color:#fff}.btn-small{padding:7px 10px;font-size:13px}
+.summary{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;font-size:14px}
+.table-wrap{overflow:auto}
+table{width:100%;border-collapse:collapse;min-width:900px}
+th,td{padding:11px 10px;border-bottom:1px solid #e8ecef;text-align:left;vertical-align:middle}
+th{background:#eef3f7;font-weight:700;white-space:nowrap}
+tr:hover td{background:#f8fbfd}
+.link-btn{background:none;color:#1769aa;padding:4px 6px;text-decoration:underline}
+.empty{text-align:center;padding:40px;color:#7a858d}
+.notice{margin-top:10px;color:#65727c;font-size:12px;line-height:1.6}
+.connection-ok{color:#176b35;font-weight:700}.connection-error{color:#b42318;font-weight:700}
+.modal{display:none;position:fixed;inset:0;background:#0007;z-index:10;padding:25px;overflow:auto}
+.modal.show{display:block}
+.modal-box{max-width:1050px;margin:20px auto;background:#fff;border-radius:10px;box-shadow:0 8px 30px #0004}
+.modal-head{padding:16px 20px;border-bottom:1px solid #e4e8eb;display:flex;justify-content:space-between;align-items:center}
+.modal-head h2{margin:0;font-size:20px}.modal-body{padding:20px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.field label{display:block;font-size:13px;font-weight:700;margin-bottom:5px}.field.full{grid-column:1/-1}
+.modal-foot{padding:15px 20px;border-top:1px solid #e4e8eb;display:flex;justify-content:flex-end;gap:8px}
+.location-row{display:grid;grid-template-columns:1fr 2fr auto;gap:8px;margin-bottom:8px;align-items:center}
+.iwrs-row{display:grid;grid-template-columns:1.3fr 1fr 1fr auto;gap:8px;margin-bottom:8px;align-items:center}
+.detail{display:none}.detail.show{display:block}
+.detail-head{display:flex;justify-content:space-between;align-items:center;padding:16px;border-bottom:1px solid #e1e6ea;gap:12px}
+.detail-head h2{margin:0;font-size:21px}.detail-body{padding:20px}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}
+.detail-item{border:1px solid #e0e5e9;border-radius:7px;padding:12px;background:#fafcfd}
+.detail-item label{display:block;font-size:12px;color:#65727c;margin-bottom:5px;font-weight:700}
+.detail-item .value{font-size:15px;white-space:pre-wrap;word-break:break-word}
+.detail-section{margin-top:18px}.detail-section h3{font-size:16px;margin:0 0 9px;padding-bottom:7px;border-bottom:2px solid #dce5ec}
+.detail-text{border:1px solid #dfe5e9;border-radius:7px;background:#fafcfd;padding:14px;min-height:80px;white-space:pre-wrap;word-break:break-word;line-height:1.7}
+.grid-display{display:grid;border:1px solid #dfe5e9;border-radius:7px;overflow:hidden}
+.grid-display.location{grid-template-columns:1fr 2fr}
+.grid-display.iwrs{grid-template-columns:1.3fr 1fr 1fr 1.1fr}
+.grid-display div{padding:9px 12px;border-bottom:1px solid #e5eaee;word-break:break-word}
+.grid-display .lh{font-weight:700;background:#f3f7fa}
+.statusbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.spinner{display:none}
+.banner{display:none;padding:12px 14px;border-radius:7px;margin-bottom:14px;font-size:14px}
+.banner.show{display:block}.banner.error{background:#fde8e7;color:#8b1e18;border:1px solid #f3c3bf}.banner.ok{background:#e5f5ea;color:#176b35;border:1px solid #bfe3ca}
+.iwrs-link{display:inline-block;color:#1769aa;text-decoration:underline;font-weight:700}.iwrs-link:hover{color:#0e4f82}.pwd-wrap{display:flex;gap:6px}.pwd-wrap input{flex:1}.pwd-toggle{padding:8px 10px;background:#e9eef2}
+@media(max-width:900px){.iwrs-row{grid-template-columns:1fr 1fr}.filters,.form-grid,.detail-grid{grid-template-columns:1fr}}
+@media(max-width:650px){.location-row,.iwrs-row{grid-template-columns:1fr}.detail-head{align-items:flex-start;flex-direction:column}.grid-display.iwrs,.grid-display.location{grid-template-columns:1fr}}
+
+.login-shell{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background:#eef3f7}
+.login-card{width:min(440px,100%);background:#fff;border:1px solid #dce2e7;border-radius:12px;box-shadow:0 8px 28px #0002;padding:28px}
+.login-card h1{margin:0 0 7px;font-size:24px;color:#1f4e78}
+.login-card p{margin:0 0 20px;color:#65727c;line-height:1.6;font-size:14px}
+.login-card .field{margin-bottom:14px}
+.login-error{display:none;margin:12px 0;padding:10px 12px;border-radius:6px;background:#fde8e7;color:#8b1e18;border:1px solid #f3c3bf;font-size:13px;line-height:1.5}
+.login-error.show{display:block}
+.login-note{margin-top:16px;padding-top:14px;border-top:1px solid #e4e8eb;color:#65727c;font-size:12px;line-height:1.6}
+body.logged-out>header,body.logged-out>.container{display:none}
+body.logged-in>#loginView{display:none}
+.userbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px;font-size:12px}
+.userbar .email{font-weight:700}
+.userbar button{padding:6px 10px;font-size:12px}
+
+</style>
+</head>
+<body class="logged-out">
+<div id="loginView" class="login-shell">
+  <div class="login-card">
+    <h1>試驗案資訊資料庫</h1>
+    <p>請使用 Supabase Auth 帳號登入。未登入時無法讀取或修改試驗案資料。</p>
+
+    <div class="field">
+      <label>Email</label>
+      <input id="loginEmail" type="email" autocomplete="username" placeholder="name@example.com">
+    </div>
+
+    <div class="field">
+      <label>Password</label>
+      <input id="loginPassword" type="password" autocomplete="current-password" placeholder="Password">
+    </div>
+
+    <div id="loginError" class="login-error"></div>
+    <button id="loginBtn" class="btn-primary" style="width:100%" onclick="signIn()">登入</button>
+
+    <div class="login-note">
+      本系統不提供自行註冊。帳號請由管理者在 Supabase Dashboard 的 Authentication → Users 建立或邀請。
+      為適合共用工作站，登入狀態只保留在目前瀏覽器工作階段；關閉瀏覽器後需重新登入。
+    </div>
+  </div>
+</div>
+
+<header>
+  <h1>試驗案資訊資料庫</h1>
+  <p>正式使用版｜Supabase Auth｜共用資料庫</p>
+  <div class="userbar">
+    <span>已登入：</span><span id="signedInEmail" class="email"></span>
+    <button class="btn-secondary" onclick="signOut()">登出</button>
+  </div>
+</header>
+
+<div class="container">
+<div id="banner" class="banner"></div>
+
+<div id="listView">
+  <div class="toolbar">
+    <div class="filters">
+      <input id="keyword" placeholder="搜尋：試驗案編號、Protocol No.、IWRS、注意事項、交互作用…">
+      <button class="btn-secondary" onclick="loadAll()">重新整理</button>
+      <button class="btn-secondary" onclick="exportTrialCsv()">匯出試驗案 CSV</button>
+      <button class="btn-secondary" onclick="exportFullBackup()">完整備份 JSON</button>
+      <button class="btn-secondary" onclick="openIwrsMaintenance()">維護 IWRS</button>
+      <button class="btn-primary" onclick="openModal()">＋ 新增試驗案</button>
+    </div>
+    <div class="notice statusbar">
+      <span>資料來源：Supabase</span>
+      <span id="connection">尚未連線</span>
+      <span id="spinner" class="spinner">處理中…</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="summary"><strong>試驗案清單</strong><span id="count"></span></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>試驗案編號</th><th>Protocol No.</th><th>藥品儲位</th><th>IWRS</th><th>操作</th></tr></thead>
+        <tbody id="trialBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div id="detailView" class="card detail">
+  <div class="detail-head">
+    <h2 id="detailTitle">試驗案詳細資料</h2>
+    <div><button class="btn-secondary" onclick="editFromDetail()">編輯</button><button class="btn-secondary" onclick="closeDetail()">返回清單</button></div>
+  </div>
+  <div class="detail-body">
+    <div class="detail-grid">
+      <div class="detail-item"><label>試驗案編號</label><div class="value" id="dSerial"></div></div>
+      <div class="detail-item"><label>Protocol No.</label><div class="value" id="dProtocol"></div></div>
+    </div>
+    <div class="detail-section"><h3>藥品儲位</h3><div class="detail-text" id="dLocations"></div></div>
+    <div class="detail-section"><h3>IWRS</h3><div class="detail-text" id="dIwrs"></div></div>
+    <div class="detail-section"><h3>覆核與調劑注意事項</h3><div class="detail-text" id="dDispensing"></div></div>
+    <div class="detail-section"><h3>留意以下藥品交互作用</h3><div class="detail-text" id="dDdi"></div></div>
+  </div>
+</div>
+</div>
+
+<div id="iwrsView" class="card detail">
+  <div class="detail-head">
+    <h2>IWRS 維護</h2>
+    <div>
+      <button class="btn-secondary" onclick="openAccountModal()">＋ 新增 IWRS 帳號</button> <button class="btn-primary" onclick="openIwrsModal()">＋ 新增 IWRS</button>
+      <button class="btn-secondary" onclick="closeIwrsMaintenance()">返回試驗案清單</button>
+    </div>
+  </div>
+  <div class="detail-body">
+    <div class="notice" style="margin-bottom:12px">
+      此頁面用於維護 IWRS 名稱與登入網址。修改後，所有試驗案中對應的 IWRS 名稱與網址會同步更新。
+    </div>
+    <div class="table-wrap">
+      <table style="min-width:700px">
+        <thead>
+          <tr>
+            <th>IWRS 名稱</th>
+            <th>網址</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody id="iwrsTableBody"></tbody>
+      </table>
+    </div>
+    <h3 style="margin-top:28px">IWRS 帳號</h3>
+    <div class="table-wrap"><table style="min-width:800px">
+      <thead><tr><th>IWRS</th><th>Login ID</th><th>Password</th><th>使用案件數</th><th>操作</th></tr></thead>
+      <tbody id="accountTableBody"></tbody>
+    </table></div>
+  </div>
+</div>
+
+<div class="modal" id="modal"><div class="modal-box">
+  <div class="modal-head"><h2 id="modalTitle">新增試驗案</h2><button class="btn-secondary" onclick="closeModal()">✕</button></div>
+  <div class="modal-body">
+    <input type="hidden" id="editId">
+    <div class="form-grid">
+      <div class="field"><label>試驗案編號 *</label><input id="serialNo"></div>
+      <div class="field"><label>Protocol No. *</label><input id="protocolNo"></div>
+
+      <div class="field full">
+        <label>藥品儲位</label>
+        <div id="locationEditor"></div>
+        <button type="button" class="btn-secondary btn-small" onclick="addLocationRow()">＋ 新增儲位</button>
+        <div class="notice">同一試驗案可設定多個儲位；儲位名稱允許重複。</div>
+      </div>
+
+      <div class="field full">
+        <label>IWRS</label>
+        <div id="iwrsEditor"></div>
+        <button type="button" class="btn-secondary btn-small" onclick="addIwrsRow()">＋ 新增 IWRS</button>
+        <div class="notice">IWRS 名稱來自資料表 <code>iwrs</code>；同一試驗案可設定多個 IWRS。</div>
+      </div>
+
+      <div class="field full"><label>覆核與調劑注意事項</label><textarea id="dispensing"></textarea></div>
+      <div class="field full"><label>留意以下藥品交互作用</label><textarea id="ddi"></textarea></div>
+    </div>
+  </div>
+  <div class="modal-foot"><button class="btn-secondary" onclick="closeModal()">取消</button><button id="saveBtn" class="btn-primary" onclick="saveTrial()">儲存</button></div>
+</div></div>
+
+<div class="modal" id="iwrsModal">
+  <div class="modal-box" style="max-width:700px">
+    <div class="modal-head">
+      <h2 id="iwrsModalTitle">新增 IWRS</h2>
+      <button class="btn-secondary" onclick="closeIwrsModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="editIwrsId">
+      <div class="form-grid">
+        <div class="field full">
+          <label>IWRS 名稱 *</label>
+          <input id="maintIwrsName" placeholder="例如：IRT / IWRS 系統名稱">
+        </div>
+        <div class="field full">
+          <label>IWRS 網址</label>
+          <input id="maintIwrsUrl" placeholder="例如：https://example.com/login">
+          <div class="notice">建議輸入完整網址，包含 https://</div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-secondary" onclick="closeIwrsModal()">取消</button>
+      <button id="iwrsSaveBtn" class="btn-primary" onclick="saveIwrs()">儲存</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="accountModal"><div class="modal-box" style="max-width:700px">
+<div class="modal-head"><h2 id="accountModalTitle">新增 IWRS 帳號</h2><button class="btn-secondary" onclick="closeAccountModal()">✕</button></div>
+<div class="modal-body"><input type="hidden" id="editAccountId"><div class="form-grid">
+<div class="field full"><label>IWRS *</label><select id="accountIwrsId"></select></div>
+<div class="field full"><label>Login ID *</label><input id="accountLoginId"></div>
+<div class="field full"><label>Password</label><input id="accountPassword" type="text"></div>
+</div><div id="accountUsageNote" class="notice"></div></div>
+<div class="modal-foot"><button class="btn-secondary" onclick="closeAccountModal()">取消</button><button class="btn-primary" onclick="saveAccount()">儲存</button></div>
+</div></div>
+
+<script>
+const SUPABASE_URL="https://fsgeuwycdxuwauyvxqti.supabase.co";
+const SUPABASE_KEY="sb_publishable_J2n_x8ep9fPq66t_9FVamQ_M9rBVXjk";
+const REST_URL=SUPABASE_URL+"/rest/v1";
+const AUTH_URL=SUPABASE_URL+"/auth/v1";
+const AUTH_STORAGE_KEY="trialDbSupabaseSession";
+
+let trials=[];
+let iwrsOptions=[];
+let iwrsAccounts=[];
+let currentDetailId=null;
+let authSession=null;
+
+function $(id){return document.getElementById(id)}
+function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function setBusy(v){$("spinner").style.display=v?"inline":"none";if($("saveBtn"))$("saveBtn").disabled=v;if($("iwrsSaveBtn"))$("iwrsSaveBtn").disabled=v}
+function setConnection(ok,msg=""){const e=$("connection");e.className=ok?"connection-ok":"connection-error";e.textContent=ok?"● 已連線":"● 連線失敗"+(msg?"："+msg:"")}
+function showBanner(msg,type="error"){const b=$("banner");b.className="banner show "+type;b.textContent=msg;setTimeout(()=>b.className="banner",6000)}
+
+function saveSession(session){
+  authSession=session;
+  if(session)sessionStorage.setItem(AUTH_STORAGE_KEY,JSON.stringify(session));
+  else sessionStorage.removeItem(AUTH_STORAGE_KEY);
+}
+
+function loadStoredSession(){
+  try{
+    const raw=sessionStorage.getItem(AUTH_STORAGE_KEY);
+    authSession=raw?JSON.parse(raw):null;
+  }catch{
+    authSession=null;
+  }
+}
+
+function authPublicHeaders(){
+  return {"apikey":SUPABASE_KEY,"Content-Type":"application/json"};
+}
+
+async function authRequest(path,body,token=null){
+  const h=authPublicHeaders();
+  if(token)h["Authorization"]="Bearer "+token;
+  const r=await fetch(AUTH_URL+path,{
+    method:"POST",
+    headers:h,
+    body:body?JSON.stringify(body):undefined
+  });
+  const txt=await r.text();
+  let data=null;
+  if(txt){try{data=JSON.parse(txt)}catch{data=txt}}
+  if(!r.ok){
+    throw new Error(
+      (data&&data.error_description)||
+      (data&&data.msg)||
+      (data&&data.message)||
+      (typeof data==="string"?data:"")||
+      ("HTTP "+r.status)
+    );
+  }
+  return data;
+}
+
+function showLogin(errorMessage=""){
+  document.body.classList.remove("logged-in");
+  document.body.classList.add("logged-out");
+  const e=$("loginError");
+  if(errorMessage){
+    e.textContent=errorMessage;
+    e.classList.add("show");
+  }else{
+    e.textContent="";
+    e.classList.remove("show");
+  }
+}
+
+function showApp(){
+  document.body.classList.remove("logged-out");
+  document.body.classList.add("logged-in");
+  $("signedInEmail").textContent=(authSession&&authSession.user&&authSession.user.email)||"已登入使用者";
+  $("loginPassword").value="";
+  $("loginError").classList.remove("show");
+}
+
+async function signIn(){
+  const email=$("loginEmail").value.trim();
+  const password=$("loginPassword").value;
+  if(!email||!password){
+    showLogin("請輸入 Email 與 Password。");
+    return;
+  }
+
+  $("loginBtn").disabled=true;
+  try{
+    const data=await authRequest("/token?grant_type=password",{email,password});
+    data.expires_at_ms=Date.now()+((data.expires_in||3600)*1000);
+    saveSession(data);
+    showApp();
+    await loadAll();
+  }catch(e){
+    saveSession(null);
+    showLogin("登入失敗："+e.message);
+  }finally{
+    $("loginBtn").disabled=false;
+  }
+}
+
+async function refreshSession(){
+  if(!authSession||!authSession.refresh_token)throw new Error("登入已失效，請重新登入。");
+  const data=await authRequest("/token?grant_type=refresh_token",{refresh_token:authSession.refresh_token});
+  data.expires_at_ms=Date.now()+((data.expires_in||3600)*1000);
+  saveSession(data);
+  return data;
+}
+
+async function ensureSession(){
+  if(!authSession||!authSession.access_token)throw new Error("請先登入。");
+  const expires=authSession.expires_at_ms||0;
+  if(expires && Date.now()>expires-60000){
+    await refreshSession();
+  }
+  return authSession.access_token;
+}
+
+async function signOut(){
+  try{
+    if(authSession&&authSession.access_token){
+      await authRequest("/logout",null,authSession.access_token);
+    }
+  }catch(e){
+    console.warn("Logout:",e);
+  }finally{
+    saveSession(null);
+    trials=[];
+    iwrsOptions=[];
+    currentDetailId=null;
+    $("listView").style.display="block";
+    $("detailView").classList.remove("show");
+    $("iwrsView").classList.remove("show");
+    showLogin();
+  }
+}
+
+async function api(path,options={}){
+  const token=await ensureSession();
+  const r=await fetch(REST_URL+path,{
+    ...options,
+    headers:{
+      "apikey":SUPABASE_KEY,
+      "Authorization":"Bearer "+token,
+      "Content-Type":"application/json",
+      ...(options.headers||{})
+    }
+  });
+  const txt=await r.text();
+  let data=null;
+  if(txt){try{data=JSON.parse(txt)}catch{data=txt}}
+
+  if(r.status===401){
+    saveSession(null);
+    showLogin("登入已失效，請重新登入。");
+    throw new Error("登入已失效，請重新登入。");
+  }
+
+  if(!r.ok){
+    throw new Error(
+      (data&&data.message)||
+      (data&&data.details)||
+      (data&&data.hint)||
+      (typeof data==="string"?data:"")||
+      ("HTTP "+r.status)
+    );
+  }
+  return data;
+}
+
+async function loadAll(){
+ setBusy(true);
+ try{
+   iwrsOptions=await api("/iwrs?select=iwrs_id,iwrs_name,iwrs_url&order=iwrs_name.asc");
+   iwrsAccounts=await api("/iwrs_accounts?select=account_id,iwrs_id,login_id,password&order=iwrs_id.asc,login_id.asc");
+   const rows=await api("/trials?select=trial_id,protocol_no,serial_no,dispensing,ddi&order=trial_id.asc");
+   for(const t of rows){
+     t.locations=await api("/trial_locations?select=location_id,storage_type,location&trial_id=eq."+encodeURIComponent(t.trial_id)+"&order=location_id.asc");
+     t.iwrs=await api("/trial_iwrs?select=trial_iwrs_id,account_id&trial_id=eq."+encodeURIComponent(t.trial_id)+"&order=trial_iwrs_id.asc");
+     t.iwrs.forEach(x=>{
+       const a=iwrsAccounts.find(a=>a.account_id===x.account_id);
+       const found=a?iwrsOptions.find(i=>i.iwrs_id===a.iwrs_id):null;
+       x.iwrs_id=a?a.iwrs_id:null; x.login_id=a?a.login_id:""; x.password=a?a.password:"";
+       x.iwrs_name=found?found.iwrs_name:"未知 IWRS"; x.iwrs_url=found?found.iwrs_url||"":"";
+     });
+   }
+   trials=rows;setConnection(true);render();
+ }catch(e){
+   setConnection(false,e.message);
+   $("trialBody").innerHTML='<tr><td colspan="5" class="empty connection-error">無法讀取資料：'+esc(e.message)+'</td></tr>';
+   $("count").textContent="";
+ }finally{setBusy(false)}
+}
+
+
+function csvEscape(v){
+ const s=String(v??"");
+ return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;
+}
+function downloadTextFile(filename, content, mime){
+ const blob=new Blob([content],{type:mime||"text/plain;charset=utf-8"});
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement("a");
+ a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();
+ setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+function exportTrialCsv(){
+ const rows=[["試驗案編號","Protocol No.","藥品儲位","IWRS","Login ID","IWRS 網址","覆核與調劑注意事項","藥品交互作用"]];
+ trials.forEach(t=>{
+   const loc=(t.locations||[]).map(x=>(x.storage_type||"")+"｜"+(x.location||"")).join("；");
+   const iwrsNames=(t.iwrs||[]).map(x=>x.iwrs_name||"").join("；");
+   const logins=(t.iwrs||[]).map(x=>x.login_id||"").join("；");
+   const urls=(t.iwrs||[]).map(x=>x.iwrs_url||"").join("；");
+   rows.push([t.serial_no||"",t.protocol_no||"",loc,iwrsNames,logins,urls,t.dispensing||"",t.ddi||""]);
+ });
+ const csv="\ufeff"+rows.map(r=>r.map(csvEscape).join(",")).join("\r\n");
+ const d=new Date().toISOString().slice(0,10);
+ downloadTextFile("TrialDatabase_"+d+".csv",csv,"text/csv;charset=utf-8");
+ showBanner("試驗案 CSV 已匯出。","ok");
+}
+function exportFullBackup(){
+ const ok=confirm("完整備份 JSON 會包含 IWRS Login ID 與 Password。\n\n請只保存於受控、安全的位置。是否繼續？");
+ if(!ok)return;
+ const backup={
+   backup_version:1,
+   exported_at:new Date().toISOString(),
+   trials:trials.map(t=>({
+     trial_id:t.trial_id,
+     protocol_no:t.protocol_no,
+     serial_no:t.serial_no,
+     dispensing:t.dispensing,
+     ddi:t.ddi,
+     locations:t.locations||[],
+     trial_iwrs:(t.iwrs||[]).map(x=>({trial_iwrs_id:x.trial_iwrs_id,account_id:x.account_id}))
+   })),
+   iwrs:iwrsOptions,
+   iwrs_accounts:iwrsAccounts
+ };
+ const d=new Date().toISOString().slice(0,10);
+ downloadTextFile("TrialDatabase_FULL_BACKUP_"+d+".json",JSON.stringify(backup,null,2),"application/json;charset=utf-8");
+ showBanner("完整 JSON 備份已匯出。","ok");
+}
+
+function render(){
+ const q=$("keyword").value.trim().toLowerCase();
+ const rows=trials.filter(t=>{
+   const loc=(t.locations||[]).map(x=>(x.storage_type||"")+" "+(x.location||"")).join(" ");
+   const iw=(t.iwrs||[]).map(x=>(x.iwrs_name||"")+" "+(x.login_id||"")).join(" ");
+   return !q||[t.serial_no,t.protocol_no,t.dispensing,t.ddi,loc,iw].join(" ").toLowerCase().includes(q);
+ });
+ $("count").textContent="共 "+rows.length+" / "+trials.length+" 件";
+ if(!rows.length){$("trialBody").innerHTML='<tr><td colspan="5" class="empty">目前沒有符合條件的試驗案</td></tr>';return}
+ $("trialBody").innerHTML=rows.map(t=>{
+   const locs=(t.locations||[]).map(x=>esc(x.storage_type||"")+"｜"+esc(x.location||"")).join("<br>")||"—";
+   const iw=(t.iwrs||[]).map(x=>esc(x.iwrs_name||"")).join("<br>")||"—";
+   return '<tr><td><strong>'+esc(t.serial_no||"—")+'</strong></td><td>'+esc(t.protocol_no||"—")+'</td><td>'+locs+'</td><td>'+iw+'</td><td>'+
+   '<button class="link-btn" onclick="showDetail('+t.trial_id+')">查看</button>'+
+   '<button class="link-btn" onclick="editTrial('+t.trial_id+')">編輯</button>'+
+   '<button class="link-btn" onclick="deleteTrial('+t.trial_id+')">刪除</button></td></tr>';
+ }).join("");
+}
+
+function addLocationRow(type="",location=""){
+ const row=document.createElement("div");row.className="location-row";
+ row.innerHTML='<select class="loc-type"><option value="">儲存方式</option><option>室溫</option><option>2–8°C</option><option>-20°C</option><option>-70°C</option><option>其他</option></select><input class="loc-name" placeholder="例如：冰箱 1、活動櫃 A-01"><button type="button" class="btn-danger btn-small" onclick="this.parentElement.remove()">移除</button>';
+ $("locationEditor").appendChild(row);row.querySelector(".loc-type").value=type;row.querySelector(".loc-name").value=location;
+}
+function getLocations(){return [...document.querySelectorAll("#locationEditor .location-row")].map(r=>({storage_type:r.querySelector(".loc-type").value.trim(),location:r.querySelector(".loc-name").value.trim()})).filter(x=>x.storage_type||x.location)}
+
+function accountSelectHtml(){
+ return '<option value="">選擇 IWRS 帳號</option>'+iwrsAccounts.map(a=>{
+   const iw=iwrsOptions.find(i=>i.iwrs_id===a.iwrs_id);
+   return '<option value="'+a.account_id+'">'+esc((iw?iw.iwrs_name:"未知 IWRS")+'｜'+a.login_id)+'</option>';
+ }).join("");
+}
+function addIwrsRow(accountId=""){
+ const row=document.createElement("div"); row.className="iwrs-row"; row.style.gridTemplateColumns="1fr auto";
+ row.innerHTML='<select class="iwrs-account">'+accountSelectHtml()+'</select><button type="button" class="btn-danger btn-small" onclick="this.parentElement.remove()">移除</button>';
+ $("iwrsEditor").appendChild(row); row.querySelector(".iwrs-account").value=String(accountId||"");
+}
+function getIwrs(){return [...document.querySelectorAll("#iwrsEditor .iwrs-row")].map(r=>({account_id:Number(r.querySelector(".iwrs-account").value)||null})).filter(x=>x.account_id)}
+
+function openIwrsMaintenance(){
+  $("listView").style.display="none";
+  $("detailView").classList.remove("show");
+  $("iwrsView").classList.add("show");
+  renderIwrsTable();
+  renderAccountTable();
+}
+
+function closeIwrsMaintenance(){
+  $("iwrsView").classList.remove("show");
+  $("listView").style.display="block";
+  render();
+}
+
+function renderIwrsTable(){
+  const body=$("iwrsTableBody");
+  if(!iwrsOptions.length){
+    body.innerHTML='<tr><td colspan="3" class="empty">目前尚未建立 IWRS</td></tr>';
+    return;
+  }
+
+  body.innerHTML=iwrsOptions.map(x=>{
+    const url=(x.iwrs_url||"").trim();
+    const link=url?'<a class="iwrs-link" href="'+esc(url)+'" target="_blank" rel="noopener noreferrer">'+esc(url)+'</a>':'—';
+    return '<tr>'+
+      '<td><strong>'+esc(x.iwrs_name||"—")+'</strong></td>'+
+      '<td>'+link+'</td>'+
+      '<td>'+
+        '<button class="link-btn" onclick="openIwrsModal('+x.iwrs_id+')">編輯</button>'+
+        '<button class="link-btn" onclick="deleteIwrs('+x.iwrs_id+')">刪除</button>'+
+      '</td>'+
+    '</tr>';
+  }).join("");
+}
+
+
+function renderAccountTable(){
+ const body=$("accountTableBody"); if(!body)return;
+ if(!iwrsAccounts.length){body.innerHTML='<tr><td colspan="5" class="empty">目前尚未建立 IWRS 帳號</td></tr>';return}
+ body.innerHTML=iwrsAccounts.map(a=>{
+  const iw=iwrsOptions.find(i=>i.iwrs_id===a.iwrs_id);
+  const used=trials.filter(t=>(t.iwrs||[]).some(x=>x.account_id===a.account_id)).length;
+  return '<tr><td>'+esc(iw?iw.iwrs_name:"未知 IWRS")+'</td><td><strong>'+esc(a.login_id)+'</strong></td><td>'+esc(a.password||"—")+'</td><td>'+used+'</td><td><button class="link-btn" onclick="openAccountModal('+a.account_id+')">編輯</button><button class="link-btn" onclick="deleteAccount('+a.account_id+')">刪除</button></td></tr>';
+ }).join("");
+}
+function openAccountModal(id=null){
+ $("accountModal").classList.add("show"); $("accountModalTitle").textContent=id?"編輯 IWRS 帳號":"新增 IWRS 帳號"; $("editAccountId").value=id||"";
+ $("accountIwrsId").innerHTML='<option value="">選擇 IWRS</option>'+iwrsOptions.map(i=>'<option value="'+i.iwrs_id+'">'+esc(i.iwrs_name)+'</option>').join("");
+ if(id){const a=iwrsAccounts.find(x=>x.account_id===id); if(!a)return; $("accountIwrsId").value=String(a.iwrs_id); $("accountLoginId").value=a.login_id||""; $("accountPassword").value=a.password||"";
+ const used=trials.filter(t=>(t.iwrs||[]).some(x=>x.account_id===id)).length; $("accountUsageNote").textContent=used?"此帳號目前由 "+used+" 個試驗案共用；修改密碼後會同步套用。":"此帳號目前未被試驗案使用。";}
+ else{$("accountIwrsId").value="";$("accountLoginId").value="";$("accountPassword").value="";$("accountUsageNote").textContent="";}
+}
+function closeAccountModal(){$("accountModal").classList.remove("show")}
+async function saveAccount(){
+ const id=$("editAccountId").value,iwrs_id=Number($("accountIwrsId").value)||null,login_id=$("accountLoginId").value.trim(),password=$("accountPassword").value;
+ if(!iwrs_id||!login_id){alert("請選擇 IWRS 並輸入 Login ID。");return}
+ setBusy(true); try{
+  const payload={iwrs_id,login_id,password:password||null};
+  if(id){const r=await api("/iwrs_accounts?account_id=eq."+encodeURIComponent(id),{method:"PATCH",headers:{"Prefer":"return=representation"},body:JSON.stringify(payload)});if(!r||!r.length)throw new Error("更新後沒有取得帳號資料。");}
+  else{const r=await api("/iwrs_accounts",{method:"POST",headers:{"Prefer":"return=representation"},body:JSON.stringify(payload)});if(!r||!r.length)throw new Error("新增後沒有取得帳號資料。");}
+  closeAccountModal();await loadAll();openIwrsMaintenance();showBanner("IWRS 帳號已成功儲存。","ok");
+ }catch(e){showBanner("IWRS 帳號儲存失敗："+e.message,"error")}finally{setBusy(false)}
+}
+async function deleteAccount(id){
+ const a=iwrsAccounts.find(x=>x.account_id===id);if(!a)return;const used=trials.filter(t=>(t.iwrs||[]).some(x=>x.account_id===id)).length;
+ let msg='確定要刪除帳號「'+a.login_id+'」嗎？';if(used)msg+='\\n\\n此帳號被 '+used+' 個試驗案使用，刪除後相關 IWRS 關聯也會一併刪除。';if(!confirm(msg))return;
+ setBusy(true);try{await api("/iwrs_accounts?account_id=eq."+encodeURIComponent(id),{method:"DELETE",headers:{"Prefer":"return=minimal"}});await loadAll();openIwrsMaintenance();showBanner("IWRS 帳號已刪除。","ok");}catch(e){showBanner("刪除失敗："+e.message,"error")}finally{setBusy(false)}
+}
+
+function openIwrsModal(id=null){
+  $("iwrsModal").classList.add("show");
+  $("iwrsModalTitle").textContent=id?"編輯 IWRS":"新增 IWRS";
+  $("editIwrsId").value=id||"";
+
+  if(id){
+    const x=iwrsOptions.find(i=>i.iwrs_id===id);
+    if(!x)return;
+    $("maintIwrsName").value=x.iwrs_name||"";
+    $("maintIwrsUrl").value=x.iwrs_url||"";
+  }else{
+    $("maintIwrsName").value="";
+    $("maintIwrsUrl").value="";
+  }
+}
+
+function closeIwrsModal(){
+  $("iwrsModal").classList.remove("show");
+}
+
+function normalizeUrl(url){
+  url=(url||"").trim();
+  if(!url)return "";
+  if(!/^https?:\/\//i.test(url))url="https://"+url;
+  return url;
+}
+
+async function saveIwrs(){
+  const id=$("editIwrsId").value;
+  const iwrs_name=$("maintIwrsName").value.trim();
+  const iwrs_url=normalizeUrl($("maintIwrsUrl").value);
+
+  if(!iwrs_name){
+    alert("請輸入 IWRS 名稱。");
+    return;
+  }
+
+  setBusy(true);
+  try{
+    const payload={iwrs_name,iwrs_url:iwrs_url||null};
+
+    if(id){
+      const result=await api(
+        "/iwrs?iwrs_id=eq."+encodeURIComponent(id),
+        {
+          method:"PATCH",
+          headers:{"Prefer":"return=representation"},
+          body:JSON.stringify(payload)
+        }
+      );
+      if(!result||!result.length)throw new Error("更新後沒有取得 IWRS 資料。請檢查 RLS UPDATE / SELECT policy。");
+    }else{
+      const result=await api(
+        "/iwrs",
+        {
+          method:"POST",
+          headers:{"Prefer":"return=representation"},
+          body:JSON.stringify(payload)
+        }
+      );
+      if(!result||!result.length)throw new Error("新增後沒有取得 IWRS 資料。請檢查 RLS INSERT / SELECT policy。");
+    }
+
+    closeIwrsModal();
+    await loadAll();
+    openIwrsMaintenance();
+    showBanner("IWRS 資料已成功儲存。","ok");
+  }catch(e){
+    showBanner("IWRS 儲存失敗："+e.message,"error");
+  }finally{
+    setBusy(false);
+  }
+}
+
+async function deleteIwrs(id){
+  const x=iwrsOptions.find(i=>i.iwrs_id===id);
+  if(!x)return;
+
+  const usedBy=trials.filter(t=>(t.iwrs||[]).some(i=>i.iwrs_id===id));
+  let msg='確定要刪除 IWRS「'+(x.iwrs_name||"")+'」嗎？';
+
+  if(usedBy.length){
+    msg+='\\n\\n此 IWRS 目前被 '+usedBy.length+' 個試驗案使用。';
+    msg+='\\n刪除後，這些試驗案與此 IWRS 的帳號 / 密碼關聯也會一併刪除。';
+  }
+
+  if(!confirm(msg))return;
+
+  setBusy(true);
+  try{
+    await api(
+      "/iwrs?iwrs_id=eq."+encodeURIComponent(id),
+      {method:"DELETE",headers:{"Prefer":"return=minimal"}}
+    );
+    await loadAll();
+    openIwrsMaintenance();
+    showBanner("IWRS 已刪除。","ok");
+  }catch(e){
+    showBanner("IWRS 刪除失敗："+e.message,"error");
+  }finally{
+    setBusy(false);
+  }
+}
+
+function openModal(id=null){
+ $("modal").classList.add("show");$("modalTitle").textContent=id?"編輯試驗案":"新增試驗案";$("editId").value=id||"";
+ $("locationEditor").innerHTML="";$("iwrsEditor").innerHTML="";
+ if(id){
+  const t=trials.find(x=>x.trial_id===id);if(!t)return;
+  $("serialNo").value=t.serial_no||"";$("protocolNo").value=t.protocol_no||"";$("dispensing").value=t.dispensing||"";$("ddi").value=t.ddi||"";
+  (t.locations||[]).forEach(x=>addLocationRow(x.storage_type||"",x.location||""));
+  (t.iwrs||[]).forEach(x=>addIwrsRow(x.account_id));
+ }else{$("serialNo").value="";$("protocolNo").value="";$("dispensing").value="";$("ddi").value=""}
+}
+function closeModal(){$("modal").classList.remove("show")}
+
+async function saveTrial(){
+ const serial_no=$("serialNo").value.trim(),protocol_no=$("protocolNo").value.trim(),dispensing=$("dispensing").value.trim(),ddi=$("ddi").value.trim();
+ const locations=getLocations(),iwrsRows=getIwrs(),editId=$("editId").value;
+ if(!serial_no||!protocol_no){alert("請至少填寫：試驗案編號、Protocol No.");return}
+ if(iwrsRows.some(x=>!x.account_id)){alert("請選擇 IWRS 帳號。");return}
+ setBusy(true);
+ try{
+  let trial_id;const payload={serial_no,protocol_no,dispensing,ddi};
+  if(editId){
+   const result=await api("/trials?trial_id=eq."+encodeURIComponent(editId),{method:"PATCH",headers:{"Prefer":"return=representation"},body:JSON.stringify(payload)});
+   if(!result||!result.length)throw new Error("更新後沒有取得試驗案資料。請檢查 RLS UPDATE / SELECT policy。");
+   trial_id=result[0].trial_id;
+   await api("/trial_locations?trial_id=eq."+encodeURIComponent(trial_id),{method:"DELETE",headers:{"Prefer":"return=minimal"}});
+   await api("/trial_iwrs?trial_id=eq."+encodeURIComponent(trial_id),{method:"DELETE",headers:{"Prefer":"return=minimal"}});
+  }else{
+   const result=await api("/trials",{method:"POST",headers:{"Prefer":"return=representation"},body:JSON.stringify(payload)});
+   if(!result||!result.length)throw new Error("新增後沒有取得 trial_id。請檢查 RLS INSERT / SELECT policy。");
+   trial_id=result[0].trial_id;
+  }
+  if(locations.length)await api("/trial_locations",{method:"POST",headers:{"Prefer":"return=minimal"},body:JSON.stringify(locations.map(x=>({trial_id,...x})))});
+  if(iwrsRows.length)await api("/trial_iwrs",{method:"POST",headers:{"Prefer":"return=minimal"},body:JSON.stringify(iwrsRows.map(x=>({trial_id,account_id:x.account_id})))});
+  closeModal();await loadAll();if(currentDetailId===trial_id)showDetail(trial_id);showBanner("資料已成功儲存到 Supabase。","ok");
+ }catch(e){showBanner("儲存失敗："+e.message,"error")}finally{setBusy(false)}
+}
+
+function showDetail(id){
+ const t=trials.find(x=>x.trial_id===id);if(!t)return;currentDetailId=id;$("listView").style.display="none";$("detailView").classList.add("show");
+ $("detailTitle").textContent=(t.serial_no||t.protocol_no||"試驗案")+"｜詳細資料";$("dSerial").textContent=t.serial_no||"—";$("dProtocol").textContent=t.protocol_no||"—";
+ const loc=t.locations||[];$("dLocations").innerHTML=loc.length?'<div class="grid-display location"><div class="lh">儲存方式</div><div class="lh">儲位</div>'+loc.map(x=>'<div>'+esc(x.storage_type||"—")+'</div><div>'+esc(x.location||"—")+'</div>').join("")+'</div>':"目前尚未設定藥品儲位。";
+ const iw=t.iwrs||[];$("dIwrs").innerHTML=iw.length?'<div class="grid-display iwrs"><div class="lh">IWRS</div><div class="lh">Login ID</div><div class="lh">Password</div><div class="lh">網址</div>'+iw.map(x=>{
+ const safeUrl=(x.iwrs_url||"").trim();
+ const link=safeUrl?'<a class="iwrs-link" href="'+esc(safeUrl)+'" target="_blank" rel="noopener noreferrer">開啟 IWRS 網站</a>':"—";
+ return '<div>'+esc(x.iwrs_name||"—")+'</div><div>'+esc(x.login_id||"—")+'</div><div>'+esc(x.password||"—")+'</div><div>'+link+'</div>';
+}).join("")+'</div>':"目前尚未設定 IWRS。";
+ $("dDispensing").textContent=t.dispensing||"目前尚未輸入注意事項。";$("dDdi").textContent=t.ddi||"目前尚未輸入藥品交互作用。";
+}
+function closeDetail(){currentDetailId=null;$("detailView").classList.remove("show");$("listView").style.display="block";render()}
+function editTrial(id){openModal(id)}function editFromDetail(){if(currentDetailId)openModal(currentDetailId)}
+
+async function deleteTrial(id){
+ const t=trials.find(x=>x.trial_id===id);if(!t)return;
+ if(!confirm("確定要刪除「"+(t.serial_no||t.protocol_no)+"」嗎？\\n\\n其藥品儲位與 IWRS 關聯也會一併刪除。"))return;
+ setBusy(true);
+ try{
+  await api("/trials?trial_id=eq."+encodeURIComponent(id),{method:"DELETE",headers:{"Prefer":"return=minimal"}});
+  if(currentDetailId===id)closeDetail();await loadAll();showBanner("試驗案已刪除。","ok");
+ }catch(e){showBanner("刪除失敗："+e.message,"error")}finally{setBusy(false)}
+}
+
+$("keyword").addEventListener("input",render);
+$("loginEmail").addEventListener("keydown",e=>{if(e.key==="Enter")signIn()});
+$("loginPassword").addEventListener("keydown",e=>{if(e.key==="Enter")signIn()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeModal();closeIwrsModal();closeAccountModal()}});
+
+async function restoreAuth(){
+  loadStoredSession();
+  if(!authSession){
+    showLogin();
+    return;
+  }
+  try{
+    await ensureSession();
+    showApp();
+    await loadAll();
+  }catch(e){
+    saveSession(null);
+    showLogin("登入工作階段已失效，請重新登入。");
+  }
+}
+restoreAuth();
+</script>
+</body>
+</html>

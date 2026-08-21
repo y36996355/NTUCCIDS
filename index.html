@@ -28,7 +28,7 @@ tr:hover td{background:#f8fbfd}
 .link-btn{background:none;color:#1769aa;padding:4px 6px;text-decoration:underline}
 .empty{text-align:center;padding:40px;color:#7a858d}
 .notice{margin-top:10px;color:#65727c;font-size:12px;line-height:1.6}
-.connection-ok{color:#176b35;font-weight:700}.connection-error{color:#b42318;font-weight:700}
+.connection-ok{color:#176b35;font-weight:700}.connection-error{color:#b42318;font-weight:700}.trial-status{font-weight:700}.status-notstarted{color:#7a858d}.status-active{color:#18864b}.status-closed{color:#c0392b}
 .modal{display:none;position:fixed;inset:0;background:#0007;z-index:10;padding:25px;overflow:auto}
 .modal.show{display:block}
 .modal-box{max-width:1050px;margin:20px auto;background:#fff;border-radius:10px;box-shadow:0 8px 30px #0004}
@@ -117,7 +117,7 @@ body.logged-in>#loginView{display:none}
 <div id="listView">
   <div class="toolbar">
     <div class="filters">
-      <input id="keyword" placeholder="搜尋：試驗案編號、Protocol No.、IWRS、注意事項、交互作用…">
+      <input id="keyword" placeholder="模糊搜尋：試驗案編號、Protocol No.、主要試驗用藥、IWRS、注意事項、交互作用…">
       <button class="btn-secondary" onclick="loadAll()">重新整理</button>
       <button class="btn-secondary" onclick="exportTrialCsv()">匯出試驗案 CSV</button>
       <button class="btn-secondary" onclick="exportFullBackup()">完整備份 JSON</button>
@@ -135,7 +135,7 @@ body.logged-in>#loginView{display:none}
     <div class="summary"><strong>試驗案清單</strong><span id="count"></span></div>
     <div class="table-wrap">
       <table>
-        <thead><tr><th>試驗案編號</th><th>Protocol No.</th><th>藥品儲位</th><th>IWRS</th><th>操作</th></tr></thead>
+        <thead><tr><th>試驗案編號</th><th>Protocol No.</th><th>主要試驗用藥</th><th>試驗案狀態</th><th>藥品儲位</th><th>IWRS</th><th>操作</th></tr></thead>
         <tbody id="trialBody"></tbody>
       </table>
     </div>
@@ -150,7 +150,7 @@ body.logged-in>#loginView{display:none}
   <div class="detail-body">
     <div class="detail-grid">
       <div class="detail-item"><label>試驗案編號</label><div class="value" id="dSerial"></div></div>
-      <div class="detail-item"><label>Protocol No.</label><div class="value" id="dProtocol"></div></div>
+      <div class="detail-item"><label>Protocol No.</label><div class="value" id="dProtocol"></div></div><div class="detail-item"><label>主要試驗用藥</label><div class="value" id="dMainDrug"></div></div><div class="detail-item"><label>試驗案狀態</label><div class="value" id="dTrialStatus"></div></div>
     </div>
     <div class="detail-section"><h3>藥品儲位</h3><div class="detail-text" id="dLocations"></div></div>
     <div class="detail-section"><h3>IWRS</h3><div class="detail-text" id="dIwrs"></div></div>
@@ -198,7 +198,7 @@ body.logged-in>#loginView{display:none}
     <input type="hidden" id="editId">
     <div class="form-grid">
       <div class="field"><label>試驗案編號 *</label><input id="serialNo"></div>
-      <div class="field"><label>Protocol No. *</label><input id="protocolNo"></div>
+      <div class="field"><label>Protocol No. *</label><input id="protocolNo"></div><div class="field"><label>主要試驗用藥</label><input id="mainDrug" placeholder="例如：Osimertinib"></div><div class="field"><label>試驗案狀態</label><select id="trialStatus"><option>未進行</option><option>進行中</option><option>結案</option></select></div>
 
       <div class="field full">
         <label>藥品儲位</label>
@@ -437,7 +437,7 @@ async function loadAll(){
  try{
    iwrsOptions=await api("/iwrs?select=iwrs_id,iwrs_name,iwrs_url&order=iwrs_name.asc");
    iwrsAccounts=await api("/iwrs_accounts?select=account_id,iwrs_id,login_id,password&order=iwrs_id.asc,login_id.asc");
-   const rows=await api("/trials?select=trial_id,protocol_no,serial_no,dispensing,ddi&order=trial_id.asc");
+   const rows=await api("/trials?select=trial_id,protocol_no,serial_no,main_drug,trial_status,dispensing,ddi&order=trial_id.asc");
    for(const t of rows){
      t.locations=await api("/trial_locations?select=location_id,storage_type,location&trial_id=eq."+encodeURIComponent(t.trial_id)+"&order=location_id.asc");
      t.iwrs=await api("/trial_iwrs?select=trial_iwrs_id,account_id&trial_id=eq."+encodeURIComponent(t.trial_id)+"&order=trial_iwrs_id.asc");
@@ -469,13 +469,13 @@ function downloadTextFile(filename, content, mime){
  setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 function exportTrialCsv(){
- const rows=[["試驗案編號","Protocol No.","藥品儲位","IWRS","Login ID","IWRS 網址","覆核與調劑注意事項","藥品交互作用"]];
+ const rows=[["試驗案編號","Protocol No.","主要試驗用藥","試驗案狀態","藥品儲位","IWRS","Login ID","IWRS 網址","覆核與調劑注意事項","藥品交互作用"]];
  trials.forEach(t=>{
    const loc=(t.locations||[]).map(x=>(x.storage_type||"")+"｜"+(x.location||"")).join("；");
    const iwrsNames=(t.iwrs||[]).map(x=>x.iwrs_name||"").join("；");
    const logins=(t.iwrs||[]).map(x=>x.login_id||"").join("；");
    const urls=(t.iwrs||[]).map(x=>x.iwrs_url||"").join("；");
-   rows.push([t.serial_no||"",t.protocol_no||"",loc,iwrsNames,logins,urls,t.dispensing||"",t.ddi||""]);
+   rows.push([t.serial_no||"",t.protocol_no||"",t.main_drug||"",t.trial_status||"未進行",loc,iwrsNames,logins,urls,t.dispensing||"",t.ddi||""]);
  });
  const csv="\ufeff"+rows.map(r=>r.map(csvEscape).join(",")).join("\r\n");
  const d=new Date().toISOString().slice(0,10);
@@ -492,6 +492,8 @@ function exportFullBackup(){
      trial_id:t.trial_id,
      protocol_no:t.protocol_no,
      serial_no:t.serial_no,
+     main_drug:t.main_drug,
+     trial_status:t.trial_status,
      dispensing:t.dispensing,
      ddi:t.ddi,
      locations:t.locations||[],
@@ -510,14 +512,19 @@ function render(){
  const rows=trials.filter(t=>{
    const loc=(t.locations||[]).map(x=>(x.storage_type||"")+" "+(x.location||"")).join(" ");
    const iw=(t.iwrs||[]).map(x=>(x.iwrs_name||"")+" "+(x.login_id||"")).join(" ");
-   return !q||[t.serial_no,t.protocol_no,t.dispensing,t.ddi,loc,iw].join(" ").toLowerCase().includes(q);
+   return !q||[t.serial_no,t.protocol_no,t.main_drug,t.trial_status,t.dispensing,t.ddi,loc,iw].join(" ").toLowerCase().includes(q);
  });
  $("count").textContent="共 "+rows.length+" / "+trials.length+" 件";
- if(!rows.length){$("trialBody").innerHTML='<tr><td colspan="5" class="empty">目前沒有符合條件的試驗案</td></tr>';return}
+ if(!rows.length){$("trialBody").innerHTML='<tr><td colspan="7" class="empty">目前沒有符合條件的試驗案</td></tr>';return}
  $("trialBody").innerHTML=rows.map(t=>{
    const locs=(t.locations||[]).map(x=>esc(x.storage_type||"")+"｜"+esc(x.location||"")).join("<br>")||"—";
    const iw=(t.iwrs||[]).map(x=>esc(x.iwrs_name||"")).join("<br>")||"—";
-   return '<tr><td><strong>'+esc(t.serial_no||"—")+'</strong></td><td>'+esc(t.protocol_no||"—")+'</td><td>'+locs+'</td><td>'+iw+'</td><td>'+
+   const status=t.trial_status||"未進行";
+   const statusClass=status==="進行中"?"status-active":status==="結案"?"status-closed":"status-notstarted";
+   return '<tr><td><strong>'+esc(t.serial_no||"—")+'</strong></td><td>'+esc(t.protocol_no||"—")+'</td>'+
+   '<td>'+esc(t.main_drug||"—")+'</td>'+
+   '<td><span class="trial-status '+statusClass+'">'+esc(status)+'</span></td>'+
+   '<td>'+locs+'</td><td>'+iw+'</td><td>'+
    '<button class="link-btn" onclick="showDetail('+t.trial_id+')">查看</button>'+
    '<button class="link-btn" onclick="editTrial('+t.trial_id+')">編輯</button>'+
    '<button class="link-btn" onclick="deleteTrial('+t.trial_id+')">刪除</button></td></tr>';
@@ -582,7 +589,7 @@ function renderIwrsTable(){
 
 function renderAccountTable(){
  const body=$("accountTableBody"); if(!body)return;
- if(!iwrsAccounts.length){body.innerHTML='<tr><td colspan="5" class="empty">目前尚未建立 IWRS 帳號</td></tr>';return}
+ if(!iwrsAccounts.length){body.innerHTML='<tr><td colspan="7" class="empty">目前尚未建立 IWRS 帳號</td></tr>';return}
  body.innerHTML=iwrsAccounts.map(a=>{
   const iw=iwrsOptions.find(i=>i.iwrs_id===a.iwrs_id);
   const used=trials.filter(t=>(t.iwrs||[]).some(x=>x.account_id===a.account_id)).length;
@@ -722,21 +729,21 @@ function openModal(id=null){
  $("locationEditor").innerHTML="";$("iwrsEditor").innerHTML="";
  if(id){
   const t=trials.find(x=>x.trial_id===id);if(!t)return;
-  $("serialNo").value=t.serial_no||"";$("protocolNo").value=t.protocol_no||"";$("dispensing").value=t.dispensing||"";$("ddi").value=t.ddi||"";
+  $("serialNo").value=t.serial_no||"";$("protocolNo").value=t.protocol_no||"";$("mainDrug").value=t.main_drug||"";$("trialStatus").value=t.trial_status||"未進行";$("dispensing").value=t.dispensing||"";$("ddi").value=t.ddi||"";
   (t.locations||[]).forEach(x=>addLocationRow(x.storage_type||"",x.location||""));
   (t.iwrs||[]).forEach(x=>addIwrsRow(x.account_id));
- }else{$("serialNo").value="";$("protocolNo").value="";$("dispensing").value="";$("ddi").value=""}
+ }else{$("serialNo").value="";$("protocolNo").value="";$("mainDrug").value="";$("trialStatus").value="未進行";$("dispensing").value="";$("ddi").value=""}
 }
 function closeModal(){$("modal").classList.remove("show")}
 
 async function saveTrial(){
- const serial_no=$("serialNo").value.trim(),protocol_no=$("protocolNo").value.trim(),dispensing=$("dispensing").value.trim(),ddi=$("ddi").value.trim();
+ const serial_no=$("serialNo").value.trim(),protocol_no=$("protocolNo").value.trim(),main_drug=$("mainDrug").value.trim(),trial_status=$("trialStatus").value,dispensing=$("dispensing").value.trim(),ddi=$("ddi").value.trim();
  const locations=getLocations(),iwrsRows=getIwrs(),editId=$("editId").value;
  if(!serial_no||!protocol_no){alert("請至少填寫：試驗案編號、Protocol No.");return}
  if(iwrsRows.some(x=>!x.account_id)){alert("請選擇 IWRS 帳號。");return}
  setBusy(true);
  try{
-  let trial_id;const payload={serial_no,protocol_no,dispensing,ddi};
+  let trial_id;const payload={serial_no,protocol_no,main_drug:main_drug||null,trial_status,dispensing,ddi};
   if(editId){
    const result=await api("/trials?trial_id=eq."+encodeURIComponent(editId),{method:"PATCH",headers:{"Prefer":"return=representation"},body:JSON.stringify(payload)});
    if(!result||!result.length)throw new Error("更新後沒有取得試驗案資料。請檢查 RLS UPDATE / SELECT policy。");
@@ -756,7 +763,7 @@ async function saveTrial(){
 
 function showDetail(id){
  const t=trials.find(x=>x.trial_id===id);if(!t)return;currentDetailId=id;$("listView").style.display="none";$("detailView").classList.add("show");
- $("detailTitle").textContent=(t.serial_no||t.protocol_no||"試驗案")+"｜詳細資料";$("dSerial").textContent=t.serial_no||"—";$("dProtocol").textContent=t.protocol_no||"—";
+ $("detailTitle").textContent=(t.serial_no||t.protocol_no||"試驗案")+"｜詳細資料";$("dSerial").textContent=t.serial_no||"—";$("dProtocol").textContent=t.protocol_no||"—";$("dMainDrug").textContent=t.main_drug||"—";const ds=t.trial_status||"未進行";const dc=ds==="進行中"?"status-active":ds==="結案"?"status-closed":"status-notstarted";$("dTrialStatus").innerHTML='<span class="trial-status '+dc+'">'+esc(ds)+"</span>";
  const loc=t.locations||[];$("dLocations").innerHTML=loc.length?'<div class="grid-display location"><div class="lh">儲存方式</div><div class="lh">儲位</div>'+loc.map(x=>'<div>'+esc(x.storage_type||"—")+'</div><div>'+esc(x.location||"—")+'</div>').join("")+'</div>':"目前尚未設定藥品儲位。";
  const iw=t.iwrs||[];$("dIwrs").innerHTML=iw.length?'<div class="grid-display iwrs"><div class="lh">IWRS</div><div class="lh">Login ID</div><div class="lh">Password</div><div class="lh">網址</div>'+iw.map(x=>{
  const safeUrl=(x.iwrs_url||"").trim();

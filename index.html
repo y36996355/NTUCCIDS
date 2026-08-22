@@ -1520,6 +1520,42 @@ img,svg{max-width:100%;height:auto}
   }
 }
 
+
+/* ===== Mobile IWRS horizontal-text fix ===== */
+@media (max-width:760px){
+  /* IWRS row: give label and value enough horizontal room */
+  .workspace-list-card td:nth-child(6){
+    display:grid!important;
+    grid-template-columns:105px minmax(0,1fr)!important;
+    align-items:start!important;
+    white-space:normal!important;
+    word-break:normal!important;
+    overflow-wrap:normal!important;
+    writing-mode:horizontal-tb!important;
+  }
+
+  .workspace-list-card td:nth-child(6)::before{
+    white-space:nowrap!important;
+    writing-mode:horizontal-tb!important;
+  }
+
+  .workspace-list-card td:nth-child(6) > *,
+  .workspace-list-card td:nth-child(6){
+    writing-mode:horizontal-tb!important;
+  }
+
+  /* IWRS name itself should stay horizontal; wrap only at normal break points */
+  .workspace-list-card td:nth-child(6){
+    min-width:0!important;
+  }
+}
+
+@media (max-width:420px){
+  .workspace-list-card td:nth-child(6){
+    grid-template-columns:92px minmax(0,1fr)!important;
+  }
+}
+
 </style>
 </head>
 <body class="logged-out">

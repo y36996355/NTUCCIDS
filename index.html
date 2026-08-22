@@ -364,6 +364,1162 @@ input,select,textarea{border-radius:8px}
   overflow-wrap:normal;
 }
 
+
+/* 清單 IWRS：每案僅顯示第一筆 IWRS 名稱 */
+.workspace-list-card th:nth-child(6),
+.workspace-list-card td:nth-child(6){
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+
+/* =========================================================
+   FINAL MORANDI DESIGN
+   New headbar generated with CSS/SVG — no screenshot embedding
+   ========================================================= */
+:root{
+  --m-green:#647f6d;
+  --m-green-deep:#526b5b;
+  --m-green-soft:#dfe8e1;
+  --m-brown:#a9917c;
+  --m-beige:#f2eae1;
+  --m-beige-soft:#f7f1ea;
+  --m-card:#fbf8f4;
+  --m-line:#ddd1c5;
+  --m-text:#2f2b27;
+  --m-muted:#6f665e;
+}
+
+body{
+  background:#f7f4f0!important;
+  color:var(--m-text)!important;
+  font-family:"Microsoft JhengHei","Noto Sans TC","PingFang TC",Arial,sans-serif!important;
+}
+
+/* New headbar */
+.workspace-header{
+  min-height:120px!important;
+  padding:22px 30px!important;
+  background:
+    linear-gradient(90deg,rgba(82,107,91,.98) 0%,rgba(100,127,109,.96) 47%,rgba(100,127,109,.10) 72%),
+    url("data:image/svg+xml;base64,CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMTIwMCIgaGVpZ2h0PSIyMjAiIHZpZXdCb3g9IjAgMCAxMjAwIDIyMCI+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImciIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIwIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzZmOGI3OSIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjU1JSIgc3RvcC1jb2xvcj0iIzc4OTQ4MiIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiM2NjgxNzEiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICA8ZmlsdGVyIGlkPSJibHVyIj48ZmVHYXVzc2lhbkJsdXIgc3RkRGV2aWF0aW9uPSIxOCIvPjwvZmlsdGVyPgogIDwvZGVmcz4KCiAgPHJlY3Qgd2lkdGg9IjEyMDAiIGhlaWdodD0iMjIwIiBmaWxsPSJ1cmwoI2cpIi8+CgogIDwhLS0gc29mdCBvcmdhbmljIGJsb2JzIC0tPgogIDxwYXRoIGQ9Ik03MjAsLTIwIEM3OTAsMCA3OTUsNTYgODQ2LDcxIEM5MDUsODkgOTQ0LDM2IDEwMDEsMjgKICAgICAgICAgICBDMTA2OCwxOCAxMTE4LDUyIDEyMDAsMTggTDEyMDAsMjIwIEw3MDAsMjIwCiAgICAgICAgICAgQzc1MiwxNzUgNzU4LDEyOCA3MjgsOTUgQzcwMCw2NSA2NzgsMjcgNzIwLC0yMFoiCiAgICAgICAgZmlsbD0iI2M4ZDJjOSIgb3BhY2l0eT0iLjg2Ii8+CiAgPHBhdGggZD0iTTEwNTAsLTEwIEMxMDkwLDIyIDEwODIsNTggMTExOSw3OSBDMTE1MCw5NiAxMTc4LDg1IDEyMDAsNjkKICAgICAgICAgICBMMTIwMCwyMjAgTDEwNDAsMjIwIEMxMDc0LDE3MCAxMDc2LDEzMSAxMDQwLDEwNCBDMTAwNCw3NyAxMDE0LDI1IDEwNTAsLTEwWiIKICAgICAgICBmaWxsPSIjNTI2YzViIiBvcGFjaXR5PSIuNzAiLz4KCiAgPCEtLSBkb3QgbWF0cml4IC0tPgogIDxnIGZpbGw9IiNlOGVlZTkiIG9wYWNpdHk9Ii43MiI+CiAgICA8Y2lyY2xlIGN4PSI2NTAiIGN5PSI0OCIgcj0iNCIvPjxjaXJjbGUgY3g9IjY3MCIgY3k9IjQ4IiByPSI0Ii8+PGNpcmNsZSBjeD0iNjkwIiBjeT0iNDgiIHI9IjQiLz4KICAgIDxjaXJjbGUgY3g9IjcxMCIgY3k9IjQ4IiByPSI0Ii8+PGNpcmNsZSBjeD0iNzMwIiBjeT0iNDgiIHI9IjQiLz4KICAgIDxjaXJjbGUgY3g9IjY2MCIgY3k9IjY2IiByPSI0Ii8+PGNpcmNsZSBjeD0iNjgwIiBjeT0iNjYiIHI9IjQiLz48Y2lyY2xlIGN4PSI3MDAiIGN5PSI2NiIgcj0iNCIvPgogICAgPGNpcmNsZSBjeD0iNzIwIiBjeT0iNjYiIHI9IjQiLz48Y2lyY2xlIGN4PSI3NDAiIGN5PSI2NiIgcj0iNCIvPgogICAgPGNpcmNsZSBjeD0iNjUwIiBjeT0iODQiIHI9IjQiLz48Y2lyY2xlIGN4PSI2NzAiIGN5PSI4NCIgcj0iNCIvPjxjaXJjbGUgY3g9IjY5MCIgY3k9Ijg0IiByPSI0Ii8+CiAgICA8Y2lyY2xlIGN4PSI3MTAiIGN5PSI4NCIgcj0iNCIvPjxjaXJjbGUgY3g9IjczMCIgY3k9Ijg0IiByPSI0Ii8+CiAgPC9nPgoKICA8IS0tIGdlb21ldHJpYyBwbGFudCAtLT4KICA8ZyBzdHJva2U9IiM0MDVmNGQiIHN0cm9rZS13aWR0aD0iNSIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSIuOTIiPgogICAgPHBhdGggZD0iTTg5MCwxOTAgQzkwMCwxNDggOTEzLDExMiA5NDQsNzIiLz4KICAgIDxwYXRoIGQ9Ik05MjEsMTE2IEM5MDAsMTAxIDg4Niw4OSA4NzksNzMiLz4KICAgIDxwYXRoIGQ9Ik05MzYsOTIgQzk1Niw3OCA5NzEsNjAgOTc2LDQwIi8+CiAgICA8cGF0aCBkPSJNOTA2LDE0NSBDODg5LDEzNiA4NzUsMTI0IDg2NywxMTAiLz4KICAgIDxwYXRoIGQ9Ik05NDgsNzQgQzk2NCw3NCA5NzksNzAgOTkzLDU5Ii8+CiAgPC9nPgogIDxnIGZpbGw9IiM0ZDZlNTkiIG9wYWNpdHk9Ii45NCI+CiAgICA8ZWxsaXBzZSBjeD0iODc5IiBjeT0iNzMiIHJ4PSIxMiIgcnk9IjIyIiB0cmFuc2Zvcm09InJvdGF0ZSgtMzUgODc5IDczKSIvPgogICAgPGVsbGlwc2UgY3g9Ijk3NiIgY3k9IjQwIiByeD0iMTIiIHJ5PSIyMiIgdHJhbnNmb3JtPSJyb3RhdGUoMjggOTc2IDQwKSIvPgogICAgPGVsbGlwc2UgY3g9Ijg2NyIgY3k9IjExMCIgcng9IjExIiByeT0iMjAiIHRyYW5zZm9ybT0icm90YXRlKC00MiA4NjcgMTEwKSIvPgogICAgPGVsbGlwc2UgY3g9Ijk5NCIgY3k9IjU5IiByeD0iMTEiIHJ5PSIyMCIgdHJhbnNmb3JtPSJyb3RhdGUoNDggOTk0IDU5KSIvPgogICAgPGVsbGlwc2UgY3g9IjkwNCIgY3k9IjE0NSIgcng9IjExIiByeT0iMjAiIHRyYW5zZm9ybT0icm90YXRlKC01NSA5MDQgMTQ1KSIvPgogIDwvZz4KCiAgPCEtLSBtZWRpY2FsIGdlb21ldHJpYyBtb3RpZnMgLS0+CiAgPGcgc3Ryb2tlPSIjZTRlYmU1IiBzdHJva2Utd2lkdGg9IjIuNSIgZmlsbD0ibm9uZSIgb3BhY2l0eT0iLjU1Ij4KICAgIDxwb2x5Z29uIHBvaW50cz0iMTAzMCw3NCAxMDYyLDU2IDEwOTQsNzQgMTA5NCwxMTAgMTA2MiwxMjggMTAzMCwxMTAiLz4KICAgIDxjaXJjbGUgY3g9IjEwNjIiIGN5PSI5MiIgcj0iMTAiLz4KICAgIDxwYXRoIGQ9Ik0xMDYyLDg0IFYxMDAgTTEwNTQsOTIgSDEwNzAiLz4KICAgIDxsaW5lIHgxPSI3NjAiIHkxPSIxNDUiIHgyPSI4MTAiIHkyPSIxMTUiLz4KICAgIDxsaW5lIHgxPSI4MTAiIHkxPSIxMTUiIHgyPSI4NTIiIHkyPSIxNDYiLz4KICAgIDxjaXJjbGUgY3g9Ijc2MCIgY3k9IjE0NSIgcj0iNiIgZmlsbD0iI2U0ZWJlNSIvPgogICAgPGNpcmNsZSBjeD0iODEwIiBjeT0iMTE1IiByPSI2IiBmaWxsPSIjZTRlYmU1Ii8+CiAgICA8Y2lyY2xlIGN4PSI4NTIiIGN5PSIxNDYiIHI9IjYiIGZpbGw9IiNlNGViZTUiLz4KICA8L2c+CgogIDwhLS0gc29mdCBjcm9zc2VzIC0tPgogIDxnIGZpbGw9IiNkYmU2ZGQiIG9wYWNpdHk9Ii4yOCI+CiAgICA8cmVjdCB4PSIxMTI1IiB5PSIxMTIiIHdpZHRoPSIxOCIgaGVpZ2h0PSI1NCIgcng9IjUiLz4KICAgIDxyZWN0IHg9IjExMDciIHk9IjEzMCIgd2lkdGg9IjU0IiBoZWlnaHQ9IjE4IiByeD0iNSIvPgogICAgPHJlY3QgeD0iODAwIiB5PSI0MiIgd2lkdGg9IjEyIiBoZWlnaHQ9IjQwIiByeD0iNCIvPgogICAgPHJlY3QgeD0iNzg2IiB5PSI1NiIgd2lkdGg9IjQwIiBoZWlnaHQ9IjEyIiByeD0iNCIvPgogIDwvZz4KPC9zdmc+Cg==") center right / cover no-repeat!important;
+  color:#fff!important;
+  box-shadow:0 2px 8px rgba(66,80,70,.14)!important;
+  overflow:hidden!important;
+}
+.workspace-header-art{display:none!important}
+.workspace-header-copy{
+  position:relative!important;
+  z-index:2!important;
+}
+.workspace-header h1{
+  margin:0!important;
+  font-size:30px!important;
+  font-weight:800!important;
+  letter-spacing:.5px!important;
+  color:#fff!important;
+}
+.workspace-header p{
+  margin:6px 0 0!important;
+  font-size:14px!important;
+  font-weight:600!important;
+  color:rgba(255,255,255,.90)!important;
+}
+.workspace-user{
+  position:relative!important;
+  z-index:3!important;
+  color:#fff!important;
+  font-weight:700!important;
+}
+.workspace-user .email{font-weight:800!important}
+.workspace-user .btn-secondary{
+  color:#fff!important;
+  background:rgba(255,255,255,.08)!important;
+  border-color:rgba(255,255,255,.38)!important;
+}
+
+/* Toolbar */
+.toolbar{
+  background:#fbf8f4!important;
+  border:1px solid var(--m-line)!important;
+  border-radius:10px!important;
+  box-shadow:0 2px 8px rgba(92,75,61,.035)!important;
+}
+.search-wrap input{
+  background:#fff!important;
+  border-color:#d6cabf!important;
+  font-weight:600!important;
+}
+.btn-primary{
+  background:var(--m-green)!important;
+  border-color:var(--m-green)!important;
+  color:#fff!important;
+  font-weight:800!important;
+}
+.btn-primary:hover{background:var(--m-green-deep)!important}
+.btn-secondary{
+  background:#fffaf6!important;
+  color:#52685a!important;
+  border-color:#cfc1b4!important;
+  font-weight:700!important;
+}
+
+/* Two-panel cards */
+.workspace-list-card,
+.workspace-detail{
+  background:var(--m-card)!important;
+  border:1px solid var(--m-line)!important;
+  box-shadow:0 3px 12px rgba(92,75,61,.045)!important;
+}
+.workspace-list-card .summary,
+.workspace-detail .detail-head{
+  background:#eee4da!important;
+  border-bottom:1px solid #d8cbbf!important;
+}
+.workspace-list-card .summary strong,
+.workspace-detail .detail-head h2{
+  color:#5c4c40!important;
+  font-weight:800!important;
+}
+
+/* List readability */
+.workspace-list-card table{
+  font-size:12.8px!important;
+}
+.workspace-list-card th{
+  background:#eee5dc!important;
+  color:#403934!important;
+  font-weight:800!important;
+  letter-spacing:.05px!important;
+}
+.workspace-list-card td{
+  background:#fbf8f4!important;
+  color:#282522!important;
+  font-weight:650!important;
+  border-bottom:1px solid #e3d8ce!important;
+}
+.workspace-list-card td strong{font-weight:800!important}
+.workspace-list-card tr:hover td{background:#f3ebe3!important}
+.workspace-list-card .link-btn{
+  color:#53695a!important;
+  font-weight:800!important;
+}
+.storage-line{
+  font-weight:700!important;
+  color:#342f2b!important;
+}
+.workspace-list-card th:nth-child(6),
+.workspace-list-card td:nth-child(6){
+  font-weight:700!important;
+}
+
+/* Detail cards */
+.workspace-detail .detail-body{
+  background:#faf6f1!important;
+}
+.detail-item,
+.detail-section{
+  background:#f6eee6!important;
+  border-color:#ddcfc2!important;
+}
+.detail-item label,
+.detail-section h3{
+  color:#51463d!important;
+  font-weight:800!important;
+}
+.detail-text{
+  background:#fffdfb!important;
+  color:#2f2a26!important;
+  font-weight:600!important;
+}
+.grid-display .lh{
+  background:#eee4da!important;
+  color:#4d443d!important;
+  font-weight:800!important;
+}
+.grid-display div{font-weight:600!important}
+
+/* Compact statistic cards */
+.compact-stats .stat-card{
+  background:#f4ece4!important;
+  border-color:#d9ccbf!important;
+}
+.compact-stats .stat-label{
+  color:#594d44!important;
+  font-weight:800!important;
+}
+.compact-stats .stat-value{
+  color:#50443c!important;
+  font-weight:800!important;
+}
+
+/* Tool menu */
+.top-tools{
+  background:#fbf8f4!important;
+  border-color:#d2c5b9!important;
+}
+.top-tools button{
+  background:#fbf8f4!important;
+  color:#4e453e!important;
+  font-weight:700!important;
+}
+.top-tools button:hover{background:#eee5dc!important}
+
+/* Pagination */
+.pagination-bar{
+  background:#f0e7de!important;
+  border-top-color:#d5c9bd!important;
+}
+.page-btn{
+  background:#fffaf6!important;
+  color:#554b43!important;
+  border-color:#cdbfb2!important;
+  font-weight:700!important;
+}
+
+/* Modal */
+.modal-box{
+  background:#fbf8f4!important;
+  border:1px solid #d8cbbf!important;
+}
+.modal-head{
+  background:#eee4da!important;
+}
+.modal-head h2{
+  color:#594a3f!important;
+  font-weight:800!important;
+}
+.modal-body{background:#fbf8f4!important}
+.modal-foot{background:#f1e9e1!important}
+.field label{
+  color:#584c43!important;
+  font-weight:800!important;
+}
+input,select,textarea{
+  background:#fffdfb!important;
+  border-color:#d3c6ba!important;
+  color:#2f2b27!important;
+  font-weight:600!important;
+}
+
+/* Preserve requested status badges */
+.status-notstarted{
+  background:#eef0f2!important;
+  color:#69747c!important;
+}
+.status-active{
+  background:#e3f4e9!important;
+  color:#24713e!important;
+}
+.status-closed{
+  background:#fde8e6!important;
+  color:#a43a30!important;
+}
+
+/* Login */
+.login-shell{background:#efeae4!important}
+.login-card{
+  background:#fbf8f4!important;
+  border-color:#d6c9bd!important;
+}
+.login-card h1{
+  color:#5a7362!important;
+  font-weight:800!important;
+}
+
+
+/* ===== Headbar composition refinement ===== */
+.workspace-header{
+  min-height:120px!important;
+  background:
+    linear-gradient(90deg,
+      rgba(79,104,88,1) 0%,
+      rgba(79,104,88,1) 60%,
+      rgba(79,104,88,.98) 67%,
+      rgba(79,104,88,.45) 78%,
+      rgba(79,104,88,.08) 90%,
+      rgba(79,104,88,0) 100%
+    ),
+    url("data:image/svg+xml;base64,CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMTUwMCIgaGVpZ2h0PSIyMjAiIHZpZXdCb3g9IjAgMCAxNTAwIDIyMCI+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMCI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiM0ZjY4NTgiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSI2MCUiIHN0b3AtY29sb3I9IiM0ZjY4NTgiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSI3MiUiIHN0b3AtY29sb3I9IiM2NjdmNmQiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSI4OCUiIHN0b3AtY29sb3I9IiM3Zjk3ODYiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjOGRhMjkyIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogIDwvZGVmcz4KCiAgPHJlY3Qgd2lkdGg9IjE1MDAiIGhlaWdodD0iMjIwIiBmaWxsPSJ1cmwoI2JnKSIvPgoKICA8IS0tIE1pZC16b25lIGRvdHRlZCBtYXRyaXggLS0+CiAgPGcgZmlsbD0iI2RiZTVkZCIgb3BhY2l0eT0iLjQyIj4KICAgIDxjaXJjbGUgY3g9IjgyMCIgY3k9IjU0IiByPSIzLjUiLz48Y2lyY2xlIGN4PSI4NDIiIGN5PSI1NCIgcj0iMy41Ii8+PGNpcmNsZSBjeD0iODY0IiBjeT0iNTQiIHI9IjMuNSIvPjxjaXJjbGUgY3g9Ijg4NiIgY3k9IjU0IiByPSIzLjUiLz4KICAgIDxjaXJjbGUgY3g9IjgzMSIgY3k9Ijc1IiByPSIzLjUiLz48Y2lyY2xlIGN4PSI4NTMiIGN5PSI3NSIgcj0iMy41Ii8+PGNpcmNsZSBjeD0iODc1IiBjeT0iNzUiIHI9IjMuNSIvPjxjaXJjbGUgY3g9Ijg5NyIgY3k9Ijc1IiByPSIzLjUiLz4KICAgIDxjaXJjbGUgY3g9IjgyMCIgY3k9Ijk2IiByPSIzLjUiLz48Y2lyY2xlIGN4PSI4NDIiIGN5PSI5NiIgcj0iMy41Ii8+PGNpcmNsZSBjeD0iODY0IiBjeT0iOTYiIHI9IjMuNSIvPjxjaXJjbGUgY3g9Ijg4NiIgY3k9Ijk2IiByPSIzLjUiLz4KICAgIDxjaXJjbGUgY3g9IjgzMSIgY3k9IjExNyIgcj0iMy41Ii8+PGNpcmNsZSBjeD0iODUzIiBjeT0iMTE3IiByPSIzLjUiLz48Y2lyY2xlIGN4PSI4NzUiIGN5PSIxMTciIHI9IjMuNSIvPjxjaXJjbGUgY3g9Ijg5NyIgY3k9IjExNyIgcj0iMy41Ii8+CiAgPC9nPgoKICA8IS0tIE1vbGVjdWxhciAvIGNvbm5lY3RlZCBub2RlcyAtLT4KICA8ZyBzdHJva2U9IiNkYmU1ZGQiIHN0cm9rZS13aWR0aD0iMiIgb3BhY2l0eT0iLjMyIiBmaWxsPSJub25lIj4KICAgIDxsaW5lIHgxPSI3NjAiIHkxPSIxNDUiIHgyPSI4MDUiIHkyPSIxMTUiLz4KICAgIDxsaW5lIHgxPSI4MDUiIHkxPSIxMTUiIHgyPSI4NTAiIHkyPSIxNDMiLz4KICAgIDxsaW5lIHgxPSI4NTAiIHkxPSIxNDMiIHgyPSI4OTAiIHkyPSIxMTUiLz4KICAgIDxsaW5lIHgxPSI4MDUiIHkxPSIxMTUiIHgyPSI3OTAiIHkyPSI3OCIvPgogICAgPGxpbmUgeDE9Ijg1MCIgeTE9IjE0MyIgeDI9Ijg3MCIgeTI9IjE3NiIvPgogIDwvZz4KICA8ZyBmaWxsPSIjZTNlYmU1IiBvcGFjaXR5PSIuNSI+CiAgICA8Y2lyY2xlIGN4PSI3NjAiIGN5PSIxNDUiIHI9IjYiLz48Y2lyY2xlIGN4PSI4MDUiIGN5PSIxMTUiIHI9IjciLz48Y2lyY2xlIGN4PSI4NTAiIGN5PSIxNDMiIHI9IjYiLz4KICAgIDxjaXJjbGUgY3g9Ijg5MCIgY3k9IjExNSIgcj0iNiIvPjxjaXJjbGUgY3g9Ijc5MCIgY3k9Ijc4IiByPSI1Ii8+PGNpcmNsZSBjeD0iODcwIiBjeT0iMTc2IiByPSI1Ii8+CiAgPC9nPgoKICA8IS0tIExhcmdlIGdlb21ldHJpYyBwbGFudCAtLT4KICA8ZyBzdHJva2U9IiMzMzRmM2YiIHN0cm9rZS13aWR0aD0iNSIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSIuOSI+CiAgICA8cGF0aCBkPSJNMTA0MCwyMDUgQzEwNDgsMTY0IDEwNjUsMTIzIDExMDAsODAiLz4KICAgIDxwYXRoIGQ9Ik0xMDc0LDEyMCBDMTA0OCwxMDIgMTAzMiw4NCAxMDIyLDY0Ii8+CiAgICA8cGF0aCBkPSJNMTA5Miw5MSBDMTExMCw3OCAxMTI4LDU4IDExMzgsMzYiLz4KICAgIDxwYXRoIGQ9Ik0xMDYxLDE1MSBDMTAzOSwxNDEgMTAyMywxMjggMTAxMCwxMDgiLz4KICAgIDxwYXRoIGQ9Ik0xMTAyLDgwIEMxMTI1LDgwIDExNDgsNzIgMTE2Niw1NyIvPgogICAgPHBhdGggZD0iTTEwODAsMTEwIEMxMDk3LDExMCAxMTExLDEwNCAxMTI0LDk0Ii8+CiAgPC9nPgogIDxnIGZpbGw9IiM0MDVmNGMiIG9wYWNpdHk9Ii45NiI+CiAgICA8ZWxsaXBzZSBjeD0iMTAyMiIgY3k9IjY0IiByeD0iMTMiIHJ5PSIyNCIgdHJhbnNmb3JtPSJyb3RhdGUoLTM4IDEwMjIgNjQpIi8+CiAgICA8ZWxsaXBzZSBjeD0iMTEzOCIgY3k9IjM2IiByeD0iMTMiIHJ5PSIyNCIgdHJhbnNmb3JtPSJyb3RhdGUoMjggMTEzOCAzNikiLz4KICAgIDxlbGxpcHNlIGN4PSIxMDEwIiBjeT0iMTA4IiByeD0iMTIiIHJ5PSIyMiIgdHJhbnNmb3JtPSJyb3RhdGUoLTQ2IDEwMTAgMTA4KSIvPgogICAgPGVsbGlwc2UgY3g9IjExNjYiIGN5PSI1NyIgcng9IjEyIiByeT0iMjIiIHRyYW5zZm9ybT0icm90YXRlKDUwIDExNjYgNTcpIi8+CiAgICA8ZWxsaXBzZSBjeD0iMTA2MCIgY3k9IjE1MSIgcng9IjEyIiByeT0iMjIiIHRyYW5zZm9ybT0icm90YXRlKC01OCAxMDYwIDE1MSkiLz4KICAgIDxlbGxpcHNlIGN4PSIxMTI0IiBjeT0iOTQiIHJ4PSIxMSIgcnk9IjIwIiB0cmFuc2Zvcm09InJvdGF0ZSg1MiAxMTI0IDk0KSIvPgogIDwvZz4KCiAgPCEtLSBNZWRpY2FsIGNyb3NzIC0tPgogIDxnIGZpbGw9IiNkYmU1ZGQiIG9wYWNpdHk9Ii4yOCI+CiAgICA8cmVjdCB4PSIxMTg2IiB5PSIxMjIiIHdpZHRoPSIxOCIgaGVpZ2h0PSI1OCIgcng9IjUiLz4KICAgIDxyZWN0IHg9IjExNjYiIHk9IjE0MiIgd2lkdGg9IjU4IiBoZWlnaHQ9IjE4IiByeD0iNSIvPgogIDwvZz4KCiAgPCEtLSBIZXhhZ29uYWwgbWVkaWNhbCBub2RlIC0tPgogIDxnIHN0cm9rZT0iI2RiZTVkZCIgc3Ryb2tlLXdpZHRoPSIyLjUiIGZpbGw9Im5vbmUiIG9wYWNpdHk9Ii41MiI+CiAgICA8cG9seWdvbiBwb2ludHM9IjEyMDIsNTIgMTIzOCwzMSAxMjc0LDUyIDEyNzQsOTQgMTIzOCwxMTUgMTIwMiw5NCIvPgogICAgPGNpcmNsZSBjeD0iMTIzOCIgY3k9IjczIiByPSIxMSIvPgogICAgPHBhdGggZD0iTTEyMzgsNjQgVjgyIE0xMjI5LDczIEgxMjQ3Ii8+CiAgPC9nPgoKICA8IS0tIEV4dHJhIGhleCBub2RlIC0tPgogIDxnIHN0cm9rZT0iI2RiZTVkZCIgc3Ryb2tlLXdpZHRoPSIyIiBmaWxsPSJub25lIiBvcGFjaXR5PSIuMjgiPgogICAgPHBvbHlnb24gcG9pbnRzPSI5NTYsNDUgOTgwLDMxIDEwMDQsNDUgMTAwNCw3MyA5ODAsODcgOTU2LDczIi8+CiAgPC9nPgoKICA8IS0tIFJpZ2h0bW9zdCBhcmVhIGludGVudGlvbmFsbHkgbGVmdCBtb3N0bHkgY2xlYW4gZm9yIGFjY291bnQgaW5mbyAtLT4KPC9zdmc+Cg==") center right / cover no-repeat!important;
+}
+.workspace-header-copy{
+  width:56%!important;
+  max-width:760px!important;
+}
+.workspace-user{
+  margin-left:auto!important;
+  min-width:260px!important;
+  justify-content:flex-end!important;
+  background:rgba(255,255,255,.04)!important;
+  padding:8px 10px!important;
+  border-radius:10px!important;
+}
+.workspace-user .email{
+  max-width:190px!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+
+
+/* ===== Headbar: deep Morandi green + waves + medical geometry ===== */
+.workspace-header{
+  min-height:120px!important;
+  background:
+    linear-gradient(90deg,
+      rgba(79,104,88,1) 0%,
+      rgba(79,104,88,1) 60%,
+      rgba(79,104,88,.98) 68%,
+      rgba(79,104,88,.58) 79%,
+      rgba(79,104,88,.16) 89%,
+      rgba(79,104,88,0) 100%
+    ),
+    url("data:image/svg+xml;base64,CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMTYwMCIgaGVpZ2h0PSIyMjAiIHZpZXdCb3g9IjAgMCAxNjAwIDIyMCI+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMCI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiM0ZjY4NTgiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSI2MCUiIHN0b3AtY29sb3I9IiM0ZjY4NTgiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSI3NSUiIHN0b3AtY29sb3I9IiM1Zjc5NjgiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSI5MCUiIHN0b3AtY29sb3I9IiM3NDhiN2IiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjODc5YThjIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogIDwvZGVmcz4KCiAgPHJlY3Qgd2lkdGg9IjE2MDAiIGhlaWdodD0iMjIwIiBmaWxsPSJ1cmwoI2JnKSIvPgoKICA8IS0tIG1pZGRsZSB3YXZlIHpvbmUgLS0+CiAgPGcgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIj4KICAgIDxwYXRoIGQ9Ik03NjAsMTYwIEM4MzAsMTEwIDkwNSwxMDggOTgwLDE0OCBDMTA0MCwxODEgMTA5NSwxODEgMTE2MCwxNDIiCiAgICAgICAgICBzdHJva2U9IiNkOGUyZGEiIHN0cm9rZS13aWR0aD0iMyIgb3BhY2l0eT0iLjM2Ii8+CiAgICA8cGF0aCBkPSJNNzQwLDE3NCBDODMwLDEyNiA5MDAsMTI2IDk3MiwxNjAgQzEwNDQsMTk0IDExMTgsMTkxIDExODgsMTQ1IgogICAgICAgICAgc3Ryb2tlPSIjZTZlY2U3IiBzdHJva2Utd2lkdGg9IjIiIG9wYWNpdHk9Ii4yNSIvPgogICAgPHBhdGggZD0iTTc5MCwxNDAgQzg2MCwxMDAgOTMwLDk4IDEwMDUsMTMyIEMxMDcwLDE2MSAxMTIwLDE1OCAxMTc4LDEyNiIKICAgICAgICAgIHN0cm9rZT0iI2M4ZDZjYyIgc3Ryb2tlLXdpZHRoPSIyIiBvcGFjaXR5PSIuMjIiLz4KICA8L2c+CgogIDwhLS0gbW9sZWN1bGFyIHN0cnVjdHVyZSAtLT4KICA8ZyBzdHJva2U9IiNlM2ViZTUiIHN0cm9rZS13aWR0aD0iMiIgZmlsbD0ibm9uZSIgb3BhY2l0eT0iLjQ2Ij4KICAgIDxsaW5lIHgxPSI5ODAiIHkxPSI3NCIgeDI9IjEwMzAiIHkyPSI1MCIvPgogICAgPGxpbmUgeDE9IjEwMzAiIHkxPSI1MCIgeDI9IjEwODAiIHkyPSI3OCIvPgogICAgPGxpbmUgeDE9IjEwODAiIHkxPSI3OCIgeDI9IjExMjUiIHkyPSI1NCIvPgogICAgPGxpbmUgeDE9IjEwMzAiIHkxPSI1MCIgeDI9IjEwMjAiIHkyPSIxMDIiLz4KICAgIDxsaW5lIHgxPSIxMDgwIiB5MT0iNzgiIHgyPSIxMDk4IiB5Mj0iMTI0Ii8+CiAgPC9nPgogIDxnIGZpbGw9IiNlM2ViZTUiIG9wYWNpdHk9Ii42NSI+CiAgICA8Y2lyY2xlIGN4PSI5ODAiIGN5PSI3NCIgcj0iNiIvPgogICAgPGNpcmNsZSBjeD0iMTAzMCIgY3k9IjUwIiByPSI3Ii8+CiAgICA8Y2lyY2xlIGN4PSIxMDgwIiBjeT0iNzgiIHI9IjYiLz4KICAgIDxjaXJjbGUgY3g9IjExMjUiIGN5PSI1NCIgcj0iNiIvPgogICAgPGNpcmNsZSBjeD0iMTAyMCIgY3k9IjEwMiIgcj0iNSIvPgogICAgPGNpcmNsZSBjeD0iMTA5OCIgY3k9IjEyNCIgcj0iNSIvPgogIDwvZz4KCiAgPCEtLSBoZXhhZ29uYWwgbWVzaCAtLT4KICA8ZyBzdHJva2U9IiNkY2U2ZGUiIHN0cm9rZS13aWR0aD0iMiIgZmlsbD0ibm9uZSIgb3BhY2l0eT0iLjMyIj4KICAgIDxwb2x5Z29uIHBvaW50cz0iMTE0MCw1MCAxMTY2LDM1IDExOTIsNTAgMTE5Miw4MCAxMTY2LDk1IDExNDAsODAiLz4KICAgIDxwb2x5Z29uIHBvaW50cz0iMTE5Miw4MCAxMjE4LDY1IDEyNDQsODAgMTI0NCwxMTAgMTIxOCwxMjUgMTE5MiwxMTAiLz4KICAgIDxwb2x5Z29uIHBvaW50cz0iMTI0NCw1MCAxMjcwLDM1IDEyOTYsNTAgMTI5Niw4MCAxMjcwLDk1IDEyNDQsODAiLz4KICA8L2c+CgogIDwhLS0gbWVkaWNhbCBjcm9zcyAtLT4KICA8ZyBmaWxsPSIjZTVlY2U3IiBvcGFjaXR5PSIuMzYiPgogICAgPHJlY3QgeD0iMTMwNSIgeT0iNDQiIHdpZHRoPSIxOCIgaGVpZ2h0PSI1OCIgcng9IjUiLz4KICAgIDxyZWN0IHg9IjEyODUiIHk9IjY0IiB3aWR0aD0iNTgiIGhlaWdodD0iMTgiIHJ4PSI1Ii8+CiAgPC9nPgoKICA8IS0tIHBpbGwgY2Fwc3VsZSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxMjQwIDEzOCkgcm90YXRlKC0xOCkiPgogICAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjcyIiBoZWlnaHQ9IjMwIiByeD0iMTUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2U4ZWVlOSIgc3Ryb2tlLXdpZHRoPSIzIiBvcGFjaXR5PSIuNTUiLz4KICAgIDxsaW5lIHgxPSIzNiIgeTE9IjIiIHgyPSIzNiIgeTI9IjI4IiBzdHJva2U9IiNlOGVlZTkiIHN0cm9rZS13aWR0aD0iMiIgb3BhY2l0eT0iLjQ1Ii8+CiAgICA8cGF0aCBkPSJNMywxNSBBMTIsMTIgMCAwIDEgMTUsMyBIMzYgVjI3IEgxNSBBMTIsMTIgMCAwIDEgMywxNVoiCiAgICAgICAgICBmaWxsPSIjZDdlMWQ5IiBvcGFjaXR5PSIuMTYiLz4KICA8L2c+CgogIDwhLS0gY2VsbCBvdXRsaW5lIC0tPgogIDxnIHN0cm9rZT0iI2UwZThlMiIgZmlsbD0ibm9uZSIgb3BhY2l0eT0iLjQiPgogICAgPHBhdGggZD0iTTEzNjUsMTMwCiAgICAgICAgICAgICBDMTM5NSwxMTIgMTQzMiwxMTUgMTQ1MCwxMzkKICAgICAgICAgICAgIEMxNDY4LDE2MiAxNDUyLDE5MiAxNDIyLDE5OQogICAgICAgICAgICAgQzEzOTAsMjA2IDEzNTgsMTg4IDEzNTYsMTU4CiAgICAgICAgICAgICBDMTM1NSwxNDcgMTM1OCwxMzggMTM2NSwxMzBaIgogICAgICAgICAgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgICA8Y2lyY2xlIGN4PSIxNDA4IiBjeT0iMTU3IiByPSIxOCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgICA8Y2lyY2xlIGN4PSIxNDAyIiBjeT0iMTUzIiByPSI0IiBmaWxsPSIjZTBlOGUyIi8+CiAgICA8Y2lyY2xlIGN4PSIxNDIwIiBjeT0iMTY1IiByPSIzIiBmaWxsPSIjZTBlOGUyIi8+CiAgICA8Y2lyY2xlIGN4PSIxMzkyIiBjeT0iMTY5IiByPSIzIiBmaWxsPSIjZTBlOGUyIi8+CiAgPC9nPgoKICA8IS0tIHRpbnkgc2Vjb25kYXJ5IGNyb3NzIC0tPgogIDxnIGZpbGw9IiNlNWVjZTciIG9wYWNpdHk9Ii4yMiI+CiAgICA8cmVjdCB4PSIxMTcwIiB5PSIxMzgiIHdpZHRoPSIxMiIgaGVpZ2h0PSI0MCIgcng9IjQiLz4KICAgIDxyZWN0IHg9IjExNTYiIHk9IjE1MiIgd2lkdGg9IjQwIiBoZWlnaHQ9IjEyIiByeD0iNCIvPgogIDwvZz4KCiAgPCEtLSByaWdodG1vc3QgMTAtMTIlIGludGVudGlvbmFsbHkgbGVmdCBtb3N0bHkgY2xlYW4gZm9yIGFjY291bnQgaW5mbyAtLT4KPC9zdmc+Cg==") center right / cover no-repeat!important;
+}
+.workspace-header-copy{
+  width:56%!important;
+  max-width:760px!important;
+}
+.workspace-user{
+  margin-left:auto!important;
+  min-width:270px!important;
+  justify-content:flex-end!important;
+  background:rgba(79,104,88,.28)!important;
+  padding:8px 10px!important;
+  border-radius:10px!important;
+  backdrop-filter:blur(2px);
+}
+.workspace-user .email{
+  max-width:190px!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+
+
+/* ===== Page background: light Morandi green ===== */
+html,
+body{
+  background:#E7EDE7!important;
+}
+
+/* Keep the workspace canvas transparent so the light green shows around cards */
+.container{
+  background:transparent!important;
+}
+
+
+/* ===== Final background: warm yellow-green Morandi ===== */
+html,
+body{
+  background:#E8E9D8!important;
+}
+
+/* Main database outer canvas */
+.container{
+  background:transparent!important;
+}
+
+/* Login screen outer background only; login card itself remains unchanged */
+.login-shell{
+  background:#E8E9D8!important;
+}
+
+
+/* ===== Refined Morandi brown title bars + milk-tea detail fields ===== */
+
+/* 清單與詳細資料：標題欄加深一階 */
+.workspace-list-card .summary,
+.workspace-detail .detail-head{
+  background:#D8C8B8!important;
+  border-bottom:1px solid #C7B5A4!important;
+}
+
+.workspace-list-card .summary strong,
+.workspace-detail .detail-head h2{
+  color:#51453B!important;
+  font-weight:800!important;
+}
+
+/* 清單表格欄位標題同步略加深，維持層次 */
+.workspace-list-card th{
+  background:#E2D5C8!important;
+  color:#403832!important;
+  border-bottom:1px solid #CFC0B2!important;
+}
+
+/* 詳細資料內的資料卡：低飽和莫蘭迪奶茶色 */
+.workspace-detail .detail-item,
+.workspace-detail .detail-section{
+  background:#EAE0D5!important;
+  border-color:#D4C5B7!important;
+}
+
+/* 詳細資料內文字區塊也統一成較淺的奶茶色 */
+.workspace-detail .detail-text{
+  background:#F1E8DE!important;
+  border-color:#D8CABC!important;
+  color:#302B27!important;
+}
+
+/* IWRS / 儲位等表格式資料 */
+.workspace-detail .grid-display{
+  background:#EFE6DC!important;
+  border-color:#D3C4B6!important;
+}
+
+.workspace-detail .grid-display .lh{
+  background:#DED0C2!important;
+  color:#4B4139!important;
+  font-weight:800!important;
+}
+
+.workspace-detail .grid-display > div:not(.lh){
+  background:#F0E7DD!important;
+}
+
+/* 詳細資料欄位標籤維持清楚對比 */
+.workspace-detail .detail-item label,
+.workspace-detail .detail-section h3{
+  color:#51463D!important;
+  font-weight:800!important;
+}
+
+
+/* =========================================================
+   Typography refinement + IWRS maintenance theme alignment
+   ========================================================= */
+
+/* 全站字體與字重層級 */
+html, body, input, select, textarea, button, table {
+  font-family:
+    "Noto Sans TC",
+    "Microsoft JhengHei",
+    "PingFang TC",
+    Arial,
+    sans-serif !important;
+}
+
+body {
+  font-weight:500!important;
+  letter-spacing:.01em;
+}
+
+/* Headbar */
+.workspace-header h1 {
+  font-weight:800!important;
+}
+.workspace-header p {
+  font-weight:500!important;
+}
+.workspace-user,
+.workspace-user .email {
+  font-weight:600!important;
+}
+
+/* 一般按鈕 */
+button,
+.btn-primary,
+.btn-secondary,
+.link-btn,
+.page-btn {
+  font-weight:700!important;
+}
+
+/* 清單 */
+.workspace-list-card th {
+  font-weight:700!important;
+}
+.workspace-list-card td {
+  font-weight:500!important;
+}
+.workspace-list-card td strong {
+  font-weight:700!important;
+}
+.workspace-list-card .summary strong {
+  font-weight:700!important;
+}
+
+/* 狀態 Badge */
+.status-pill {
+  font-weight:700!important;
+}
+
+/* 詳細資料 */
+.workspace-detail .detail-head h2 {
+  font-weight:700!important;
+}
+.detail-item label,
+.detail-section h3,
+.grid-display .lh {
+  font-weight:700!important;
+}
+.detail-item .value,
+.detail-text,
+.grid-display > div:not(.lh) {
+  font-weight:500!important;
+}
+
+/* 統計 */
+.compact-stats .stat-label {
+  font-weight:600!important;
+}
+.compact-stats .stat-value {
+  font-weight:800!important;
+}
+
+/* 表單 */
+.field label {
+  font-weight:700!important;
+}
+input, select, textarea {
+  font-weight:500!important;
+}
+.modal-head h2 {
+  font-weight:700!important;
+}
+
+/* =========================================================
+   IWRS 維護頁：完整套用現行莫蘭迪設計
+   ========================================================= */
+#iwrsView {
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+}
+
+#iwrsView .detail-head {
+  background:#D8C8B8!important;
+  border:1px solid #C7B5A4!important;
+  border-bottom:1px solid #C7B5A4!important;
+  border-radius:12px 12px 0 0!important;
+  padding:16px 18px!important;
+}
+
+#iwrsView .detail-head h2 {
+  color:#51453B!important;
+  font-weight:700!important;
+}
+
+#iwrsView .detail-body {
+  background:#FBF8F4!important;
+  border:1px solid #D8CABE!important;
+  border-top:0!important;
+  border-radius:0 0 12px 12px!important;
+  padding:20px!important;
+  box-shadow:0 3px 12px rgba(92,75,61,.045)!important;
+}
+
+#iwrsView .notice {
+  background:#F1E8DE!important;
+  color:#5F554D!important;
+  border:1px solid #DDD0C4!important;
+  border-radius:8px!important;
+  padding:10px 12px!important;
+  font-weight:500!important;
+}
+
+#iwrsView h3 {
+  color:#51463D!important;
+  font-weight:700!important;
+  margin-top:22px!important;
+  margin-bottom:10px!important;
+}
+
+/* IWRS 維護表格 */
+#iwrsView table {
+  background:#FBF8F4!important;
+  border:1px solid #D8CABE!important;
+  border-radius:10px!important;
+  overflow:hidden!important;
+}
+
+#iwrsView th {
+  background:#E2D5C8!important;
+  color:#403832!important;
+  font-weight:700!important;
+  border-bottom:1px solid #CFC0B2!important;
+}
+
+#iwrsView td {
+  background:#FBF8F4!important;
+  color:#2F2B27!important;
+  font-weight:500!important;
+  border-bottom:1px solid #E4D9CE!important;
+}
+
+#iwrsView tr:hover td {
+  background:#F3EBE3!important;
+}
+
+#iwrsView td strong {
+  font-weight:700!important;
+}
+
+#iwrsView .link-btn {
+  color:#53695A!important;
+  font-weight:700!important;
+}
+
+/* IWRS 維護頁按鈕 */
+#iwrsView .btn-primary {
+  background:#647F6D!important;
+  border-color:#647F6D!important;
+  color:#fff!important;
+  font-weight:700!important;
+}
+
+#iwrsView .btn-primary:hover {
+  background:#526B5B!important;
+}
+
+#iwrsView .btn-secondary {
+  background:#FFFAF6!important;
+  color:#52685A!important;
+  border-color:#CFC1B4!important;
+  font-weight:700!important;
+}
+
+/* IWRS 新增/編輯 Modal 也同步配色 */
+#iwrsModal .modal-box,
+#accountModal .modal-box {
+  background:#FBF8F4!important;
+  border:1px solid #D8CABE!important;
+}
+
+#iwrsModal .modal-head,
+#accountModal .modal-head {
+  background:#D8C8B8!important;
+  border-bottom:1px solid #C7B5A4!important;
+}
+
+#iwrsModal .modal-head h2,
+#accountModal .modal-head h2 {
+  color:#51453B!important;
+  font-weight:700!important;
+}
+
+#iwrsModal .modal-body,
+#accountModal .modal-body {
+  background:#FBF8F4!important;
+}
+
+#iwrsModal .modal-foot,
+#accountModal .modal-foot {
+  background:#F1E9E1!important;
+  border-top:1px solid #D8CABE!important;
+}
+
+#iwrsModal label,
+#accountModal label {
+  color:#584C43!important;
+  font-weight:700!important;
+}
+
+#iwrsModal input,
+#iwrsModal select,
+#accountModal input,
+#accountModal select {
+  background:#FFFDFB!important;
+  border-color:#D3C6BA!important;
+  color:#2F2B27!important;
+  font-weight:500!important;
+}
+
+/* Login 字體也同步 */
+.login-card h1 {
+  font-weight:800!important;
+}
+.login-card p,
+.login-note {
+  font-weight:500!important;
+}
+.login-card label {
+  font-weight:700!important;
+}
+
+
+/* ===== 詳細資料表格：與左側清單統一配色 ===== */
+
+/* 詳細資料中的 IWRS / 藥品儲位等表格外框 */
+.workspace-detail .grid-display{
+  background:#FBF8F4!important;
+  border:1px solid #D8CABE!important;
+  border-radius:8px!important;
+  overflow:hidden!important;
+}
+
+/* 表格欄位標題：與清單 th 相同 */
+.workspace-detail .grid-display .lh{
+  background:#E2D5C8!important;
+  color:#403832!important;
+  font-weight:700!important;
+  border-bottom:1px solid #CFC0B2!important;
+}
+
+/* 表格資料內容：與清單 td 相同 */
+.workspace-detail .grid-display > div:not(.lh){
+  background:#FBF8F4!important;
+  color:#2F2B27!important;
+  font-weight:500!important;
+  border-bottom:1px solid #E4D9CE!important;
+}
+
+/* 詳細資料一般欄位卡片也採用與清單一致的淺色內容底 */
+.workspace-detail .detail-item{
+  background:#FBF8F4!important;
+  border-color:#D8CABE!important;
+}
+
+/* 長文字區塊仍保留些微奶茶層次，但降低色差 */
+.workspace-detail .detail-text{
+  background:#FBF8F4!important;
+  border-color:#D8CABE!important;
+}
+
+
+/* =========================================================
+   Responsive layout — PC / Tablet / Mobile
+   Keeps current Morandi visual language and all functionality
+   ========================================================= */
+
+/* Base safeguards */
+html,body{max-width:100%;overflow-x:hidden}
+img,svg{max-width:100%;height:auto}
+
+/* Tablet */
+@media (max-width:1180px){
+  .container{
+    max-width:100%!important;
+    padding:0 16px!important;
+  }
+
+  .workspace-grid{
+    grid-template-columns:1fr!important;
+    gap:16px!important;
+  }
+
+  .workspace-right{
+    position:static!important;
+  }
+
+  .workspace-detail{
+    min-height:auto!important;
+  }
+
+  .workspace-list-card .table-wrap{
+    overflow-x:auto!important;
+    -webkit-overflow-scrolling:touch;
+  }
+
+  .toolbar-main{
+    align-items:stretch!important;
+  }
+
+  .search-wrap{
+    flex:1 1 100%!important;
+  }
+
+  .toolbar-actions{
+    width:100%!important;
+  }
+}
+
+/* Mobile */
+@media (max-width:760px){
+
+  /* Header */
+  .workspace-header{
+    min-height:128px!important;
+    padding:16px!important;
+    align-items:flex-start!important;
+    flex-direction:column!important;
+    gap:10px!important;
+  }
+
+  .workspace-header-copy{
+    width:100%!important;
+    max-width:none!important;
+    z-index:3!important;
+  }
+
+  .workspace-header h1{
+    font-size:23px!important;
+    line-height:1.25!important;
+  }
+
+  .workspace-header p{
+    font-size:12px!important;
+    margin-top:4px!important;
+  }
+
+  .workspace-user{
+    min-width:0!important;
+    width:auto!important;
+    max-width:100%!important;
+    margin-left:0!important;
+    padding:6px 8px!important;
+    gap:5px!important;
+    align-self:flex-end!important;
+    font-size:11px!important;
+  }
+
+  .workspace-user .email{
+    max-width:145px!important;
+  }
+
+  /* Page spacing */
+  .container{
+    margin:14px auto!important;
+    padding:0 10px!important;
+  }
+
+  /* Toolbar */
+  .toolbar{
+    padding:12px!important;
+    border-radius:10px!important;
+  }
+
+  .toolbar-main{
+    display:block!important;
+  }
+
+  .search-wrap{
+    width:100%!important;
+    margin-bottom:9px!important;
+  }
+
+  .search-wrap input{
+    width:100%!important;
+    font-size:14px!important;
+    padding:11px 12px!important;
+  }
+
+  .toolbar-actions{
+    display:grid!important;
+    grid-template-columns:1fr 1fr!important;
+    gap:8px!important;
+  }
+
+  .toolbar-actions .tools-wrap{
+    grid-column:1 / -1!important;
+  }
+
+  .toolbar-actions > button,
+  .toolbar-actions .tools-wrap > button{
+    width:100%!important;
+  }
+
+  .top-tools{
+    left:0!important;
+    right:auto!important;
+    width:100%!important;
+    min-width:0!important;
+  }
+
+  .statusbar{
+    margin-top:8px!important;
+    font-size:10px!important;
+  }
+
+  /* Main workspace */
+  .workspace-grid{
+    display:block!important;
+  }
+
+  .workspace-left,
+  .workspace-right{
+    width:100%!important;
+  }
+
+  .workspace-right{
+    margin-top:14px!important;
+  }
+
+  /* Turn table list into cards */
+  .workspace-list-card{
+    border-radius:10px!important;
+  }
+
+  .workspace-list-card .summary{
+    padding:12px!important;
+  }
+
+  .workspace-list-card .table-wrap{
+    overflow:visible!important;
+  }
+
+  .workspace-list-card table,
+  .workspace-list-card thead,
+  .workspace-list-card tbody,
+  .workspace-list-card th,
+  .workspace-list-card td,
+  .workspace-list-card tr{
+    display:block!important;
+    width:100%!important;
+  }
+
+  .workspace-list-card thead{
+    display:none!important;
+  }
+
+  .workspace-list-card table{
+    min-width:0!important;
+    table-layout:auto!important;
+  }
+
+  .workspace-list-card tbody{
+    padding:8px!important;
+  }
+
+  .workspace-list-card tr{
+    margin:0 0 10px!important;
+    padding:10px 11px!important;
+    background:#FBF8F4!important;
+    border:1px solid #D8CABE!important;
+    border-radius:10px!important;
+    box-shadow:0 2px 7px rgba(92,75,61,.035)!important;
+  }
+
+  .workspace-list-card td{
+    border:0!important;
+    padding:4px 0!important;
+    min-height:0!important;
+    display:grid!important;
+    grid-template-columns:105px 1fr!important;
+    gap:8px!important;
+    align-items:start!important;
+    font-size:12px!important;
+    background:transparent!important;
+    white-space:normal!important;
+    overflow:visible!important;
+    text-overflow:clip!important;
+  }
+
+  .workspace-list-card td::before{
+    font-weight:700!important;
+    color:#5F5146!important;
+  }
+
+  .workspace-list-card td:nth-child(1)::before{content:"試驗案編號"}
+  .workspace-list-card td:nth-child(2)::before{content:"Protocol No."}
+  .workspace-list-card td:nth-child(3)::before{content:"主要試驗用藥"}
+  .workspace-list-card td:nth-child(4)::before{content:"試驗案狀態"}
+  .workspace-list-card td:nth-child(5)::before{content:"藥品儲位"}
+  .workspace-list-card td:nth-child(6)::before{content:"IWRS"}
+  .workspace-list-card td:nth-child(7)::before{content:"操作"}
+
+  .workspace-list-card td:nth-child(7){
+    display:flex!important;
+    gap:6px!important;
+    padding-top:8px!important;
+    border-top:1px solid #E4D9CE!important;
+    margin-top:5px!important;
+  }
+
+  .workspace-list-card td:nth-child(7)::before{
+    content:""!important;
+    display:none!important;
+  }
+
+  .workspace-list-card .link-btn{
+    flex:1!important;
+    padding:7px 6px!important;
+    border:1px solid #CFC1B4!important;
+    border-radius:7px!important;
+    background:#FFF9F4!important;
+    text-align:center!important;
+    font-size:11px!important;
+    text-decoration:none!important;
+  }
+
+  .storage-line{
+    white-space:normal!important;
+    display:block!important;
+  }
+
+  /* Stats */
+  .compact-stats{
+    grid-template-columns:repeat(2,1fr)!important;
+    width:100%!important;
+    gap:7px!important;
+  }
+
+  .compact-stats .stat-card{
+    min-width:0!important;
+    width:100%!important;
+  }
+
+  /* Pagination */
+  .pagination-bar{
+    padding:9px 10px!important;
+    gap:7px!important;
+  }
+
+  .page-controls{
+    width:100%!important;
+    justify-content:space-between!important;
+  }
+
+  .page-btn{
+    padding:7px 9px!important;
+  }
+
+  /* Detail */
+  .workspace-detail{
+    border-radius:10px!important;
+  }
+
+  .workspace-detail .detail-head{
+    padding:12px!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:space-between!important;
+    gap:8px!important;
+  }
+
+  .workspace-detail .detail-head h2{
+    font-size:18px!important;
+  }
+
+  .workspace-detail .detail-body{
+    padding:12px!important;
+  }
+
+  .workspace-detail .detail-grid{
+    grid-template-columns:1fr!important;
+    gap:8px!important;
+  }
+
+  .detail-item{
+    padding:10px!important;
+  }
+
+  .detail-section{
+    padding:11px!important;
+    margin-top:10px!important;
+  }
+
+  .detail-section h3{
+    font-size:14px!important;
+  }
+
+  .grid-display.location,
+  .grid-display.iwrs{
+    grid-template-columns:1fr!important;
+  }
+
+  .grid-display .lh{
+    display:none!important;
+  }
+
+  .grid-display > div:not(.lh){
+    border-bottom:1px solid #E4D9CE!important;
+    padding:8px!important;
+  }
+
+  /* Modal: full-width mobile */
+  .modal{
+    padding:8px!important;
+  }
+
+  .modal-box{
+    width:100%!important;
+    max-width:none!important;
+    margin:8px auto!important;
+    border-radius:12px!important;
+  }
+
+  .modal-head{
+    padding:13px 14px!important;
+  }
+
+  .modal-body{
+    padding:14px!important;
+  }
+
+  .modal-foot{
+    padding:12px 14px!important;
+    position:sticky!important;
+    bottom:0!important;
+    z-index:2!important;
+  }
+
+  .form-grid{
+    grid-template-columns:1fr!important;
+    gap:10px!important;
+  }
+
+  .field.full{
+    grid-column:auto!important;
+  }
+
+  .location-row,
+  .iwrs-row{
+    grid-template-columns:1fr!important;
+    gap:7px!important;
+  }
+
+  textarea{
+    min-height:90px!important;
+  }
+
+  /* IWRS maintenance mobile */
+  #iwrsView .detail-head{
+    flex-direction:column!important;
+    align-items:flex-start!important;
+  }
+
+  #iwrsView .detail-head > div{
+    width:100%!important;
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    gap:7px!important;
+  }
+
+  #iwrsView .detail-head button{
+    width:100%!important;
+  }
+
+  #iwrsView .table-wrap{
+    overflow-x:auto!important;
+    -webkit-overflow-scrolling:touch;
+  }
+
+  #iwrsView table{
+    min-width:650px!important;
+  }
+
+  /* Login */
+  .login-shell{
+    padding:14px!important;
+    min-height:100vh!important;
+  }
+
+  .login-card{
+    width:100%!important;
+    max-width:440px!important;
+    padding:22px 18px!important;
+  }
+
+  .login-card h1{
+    font-size:22px!important;
+  }
+}
+
+/* Very small phones */
+@media (max-width:420px){
+  .workspace-header h1{font-size:21px!important}
+  .workspace-user{font-size:10px!important}
+  .workspace-user .email{max-width:115px!important}
+  .toolbar-actions{grid-template-columns:1fr!important}
+  .toolbar-actions .tools-wrap{grid-column:auto!important}
+  .workspace-list-card td{
+    grid-template-columns:92px 1fr!important;
+  }
+}
+
 </style>
 </head>
 <body class="logged-out">
@@ -881,6 +2037,44 @@ function renderPagination(totalRows,totalPages){
     '</div>';
 }
 
+
+function storageSortRank(storageType){
+ const s=String(storageType||"").trim().toLowerCase();
+
+ // 室溫
+ if(s.includes("室溫") || s.includes("room") || s.includes("ambient")) return 1;
+
+ // 冷藏 / 2–8°C
+ if(
+   s.includes("冷藏") ||
+   s.includes("2–8") || s.includes("2-8") ||
+   s.includes("2~8") || s.includes("2～8")
+ ) return 2;
+
+ // 冷凍 / -20°C / -70°C 等
+ if(
+   s.includes("冷凍") ||
+   s.includes("-20") || s.includes("−20") ||
+   s.includes("-70") || s.includes("−70") ||
+   s.includes("freezer") || s.includes("frozen")
+ ) return 3;
+
+ return 4;
+}
+
+function sortedLocations(locations){
+ return [...(locations||[])].sort((a,b)=>{
+   const rankDiff=storageSortRank(a.storage_type)-storageSortRank(b.storage_type);
+   if(rankDiff!==0)return rankDiff;
+
+   // 同類型內維持可預期順序
+   const typeCompare=String(a.storage_type||"").localeCompare(String(b.storage_type||""),"zh-Hant");
+   if(typeCompare!==0)return typeCompare;
+
+   return String(a.location||"").localeCompare(String(b.location||""),"zh-Hant",{numeric:true});
+ });
+}
+
 function render(){
  const q=$("keyword").value.trim().toLowerCase();
 
@@ -913,8 +2107,9 @@ function render(){
  }
 
  $("trialBody").innerHTML=pageRows.map(t=>{
-   const locs=(t.locations||[]).map(x=>'<span class="storage-line">'+esc(x.storage_type||"")+"｜"+esc(x.location||"")+'</span>').join("")||"—";
-   const iw=(t.iwrs||[]).map(x=>esc(x.iwrs_name||"")).join("<br>")||"—";
+   const locs=sortedLocations(t.locations).map(x=>'<span class="storage-line">'+esc(x.storage_type||"")+"｜"+esc(x.location||"")+'</span>').join("")||"—";
+   const firstIwrs=(t.iwrs||[])[0];
+   const iw=firstIwrs?esc(firstIwrs.iwrs_name||"—"):"—";
    const status=t.trial_status||"未進行";
    const statusClass=status==="進行中"?"status-active":status==="結案"?"status-closed":"status-notstarted";
 
@@ -1169,7 +2364,7 @@ async function saveTrial(){
 function showDetail(id){
  const t=trials.find(x=>x.trial_id===id);if(!t)return;currentDetailId=id;$("detailView").classList.remove("detail-empty");
  $("detailTitle").textContent=(t.serial_no||t.protocol_no||"試驗案")+"｜詳細資料";$("dSerial").textContent=t.serial_no||"—";$("dProtocol").textContent=t.protocol_no||"—";$("dMainDrug").textContent=t.main_drug||"—";const ds=t.trial_status||"未進行";const dc=ds==="進行中"?"status-active":ds==="結案"?"status-closed":"status-notstarted";$("dTrialStatus").innerHTML='<span class="status-pill '+dc+'">'+esc(ds)+"</span>";
- const loc=t.locations||[];$("dLocations").innerHTML=loc.length?'<div class="grid-display location"><div class="lh">儲存方式</div><div class="lh">儲位</div>'+loc.map(x=>'<div>'+esc(x.storage_type||"—")+'</div><div>'+esc(x.location||"—")+'</div>').join("")+'</div>':"目前尚未設定藥品儲位。";
+ const loc=sortedLocations(t.locations);$("dLocations").innerHTML=loc.length?'<div class="grid-display location"><div class="lh">儲存方式</div><div class="lh">儲位</div>'+loc.map(x=>'<div>'+esc(x.storage_type||"—")+'</div><div>'+esc(x.location||"—")+'</div>').join("")+'</div>':"目前尚未設定藥品儲位。";
  const iw=t.iwrs||[];$("dIwrs").innerHTML=iw.length?'<div class="grid-display iwrs"><div class="lh">IWRS</div><div class="lh">Login ID</div><div class="lh">Password</div><div class="lh">網址</div>'+iw.map(x=>{
  const safeUrl=(x.iwrs_url||"").trim();
  const link=safeUrl?'<a class="iwrs-link" href="'+esc(safeUrl)+'" target="_blank" rel="noopener noreferrer">開啟 IWRS 網站</a>':"—";

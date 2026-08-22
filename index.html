@@ -1638,6 +1638,80 @@ img,svg{max-width:100%;height:auto}
   }
 }
 
+
+/* ===== Definitive mobile storage block layout ===== */
+@media (max-width:760px){
+
+  /* Override ALL generic mobile td grid rules */
+  .workspace-list-card tr > td.mobile-storage-cell{
+    display:block!important;
+    grid-template-columns:none!important;
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    box-sizing:border-box!important;
+    padding:8px 0!important;
+    margin:0!important;
+    white-space:normal!important;
+    overflow:visible!important;
+  }
+
+  /* Label occupies its own row */
+  .workspace-list-card tr > td.mobile-storage-cell::before{
+    content:"藥品儲位"!important;
+    display:block!important;
+    position:static!important;
+    float:none!important;
+    width:100%!important;
+    max-width:none!important;
+    margin:0 0 6px 0!important;
+    padding:0!important;
+    white-space:nowrap!important;
+    color:#5F5146!important;
+    font-weight:700!important;
+    line-height:1.4!important;
+  }
+
+  /* Data area is a separate full-width row */
+  .workspace-list-card tr > td.mobile-storage-cell > .mobile-storage-value{
+    display:block!important;
+    position:static!important;
+    float:none!important;
+    clear:both!important;
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    margin:0!important;
+    padding:0!important;
+    box-sizing:border-box!important;
+    white-space:normal!important;
+    overflow:visible!important;
+  }
+
+  /* Every storage record is one line */
+  .workspace-list-card tr > td.mobile-storage-cell > .mobile-storage-value > .storage-line{
+    display:block!important;
+    width:100%!important;
+    max-width:100%!important;
+    margin:0 0 4px 0!important;
+    padding:0!important;
+    box-sizing:border-box!important;
+    white-space:nowrap!important;
+    word-break:keep-all!important;
+    overflow-wrap:normal!important;
+    writing-mode:horizontal-tb!important;
+    line-height:1.5!important;
+    font-weight:600!important;
+  }
+
+  /* Prevent desktop nth-child width rules from constraining mobile storage */
+  .workspace-list-card th:nth-child(5),
+  .workspace-list-card td:nth-child(5){
+    width:100%!important;
+    max-width:100%!important;
+  }
+}
+
 </style>
 </head>
 <body class="logged-out">

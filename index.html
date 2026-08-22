@@ -1594,6 +1594,50 @@ img,svg{max-width:100%;height:auto}
   }
 }
 
+
+/* ===== Mobile storage-location readability fix ===== */
+@media (max-width:760px){
+  .workspace-list-card td.mobile-storage-cell{
+    display:block!important;
+    width:100%!important;
+    min-width:0!important;
+    padding:5px 0!important;
+    white-space:normal!important;
+    writing-mode:horizontal-tb!important;
+  }
+
+  .workspace-list-card td.mobile-storage-cell::before{
+    content:"藥品儲位"!important;
+    display:block!important;
+    width:100%!important;
+    margin:0 0 3px!important;
+    color:#5F5146!important;
+    font-weight:700!important;
+    white-space:nowrap!important;
+  }
+
+  .workspace-list-card .mobile-storage-value{
+    display:block!important;
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    white-space:normal!important;
+    word-break:normal!important;
+    overflow-wrap:anywhere!important;
+    line-height:1.55!important;
+  }
+
+  .workspace-list-card .mobile-storage-value .storage-line{
+    display:block!important;
+    width:100%!important;
+    white-space:normal!important;
+    word-break:keep-all!important;
+    overflow-wrap:normal!important;
+    margin:0 0 2px!important;
+    font-weight:600!important;
+  }
+}
+
 </style>
 </head>
 <body class="logged-out">
@@ -2192,7 +2236,7 @@ function render(){
      '<td>'+esc(t.protocol_no||"—")+'</td>'+
      '<td>'+esc(t.main_drug||"—")+'</td>'+
      '<td><span class="status-pill '+statusClass+'">'+esc(status)+'</span></td>'+
-     '<td>'+locs+'</td>'+
+     '<td class="mobile-storage-cell"><div class="mobile-storage-value">'+locs+'</div></td>'+
      '<td class="mobile-iwrs-cell"><span class="mobile-iwrs-value">'+iw+'</span></td>'+
      '<td>'+
        '<button class="link-btn" onclick="showDetail('+t.trial_id+')">查看</button>'+

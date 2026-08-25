@@ -1735,6 +1735,148 @@ img,svg{max-width:100%;height:auto}
  .web-account-table{min-width:760px!important}
 }
 
+
+/* =========================================================
+   其他試驗用網站：手機版卡片式清單
+   PC / Tablet 表格維持不變
+   ========================================================= */
+@media(max-width:760px){
+
+  #webAccountsView .table-wrap{
+    overflow:visible!important;
+  }
+
+  #webAccountsView .web-account-table,
+  #webAccountsView .web-account-table thead,
+  #webAccountsView .web-account-table tbody,
+  #webAccountsView .web-account-table th,
+  #webAccountsView .web-account-table td,
+  #webAccountsView .web-account-table tr{
+    display:block!important;
+    width:100%!important;
+  }
+
+  #webAccountsView .web-account-table{
+    min-width:0!important;
+    border:0!important;
+    background:transparent!important;
+  }
+
+  #webAccountsView .web-account-table thead{
+    display:none!important;
+  }
+
+  #webAccountsView .web-account-table tbody{
+    padding:0!important;
+  }
+
+  #webAccountsView .web-account-table tr{
+    margin:0 0 10px!important;
+    padding:11px 12px!important;
+    background:#FBF8F4!important;
+    border:1px solid #D8CABE!important;
+    border-radius:10px!important;
+    box-shadow:0 2px 7px rgba(92,75,61,.035)!important;
+  }
+
+  #webAccountsView .web-account-table td{
+    display:grid!important;
+    grid-template-columns:92px minmax(0,1fr)!important;
+    gap:8px!important;
+    align-items:start!important;
+    padding:5px 0!important;
+    border:0!important;
+    background:transparent!important;
+    color:#2F2B27!important;
+    font-size:12px!important;
+    white-space:normal!important;
+    overflow:visible!important;
+    text-overflow:clip!important;
+  }
+
+  #webAccountsView .web-account-table td::before{
+    color:#5F5146!important;
+    font-weight:700!important;
+    white-space:nowrap!important;
+  }
+
+  #webAccountsView .web-account-table td:nth-child(1)::before{content:"網站名稱"}
+  #webAccountsView .web-account-table td:nth-child(2)::before{content:"分類"}
+  #webAccountsView .web-account-table td:nth-child(3)::before{content:"Login ID"}
+  #webAccountsView .web-account-table td:nth-child(4)::before{content:"登入網址"}
+  #webAccountsView .web-account-table td:nth-child(5)::before{content:"操作"}
+
+  #webAccountsView .web-account-table td:nth-child(1) strong{
+    font-weight:800!important;
+    color:#403832!important;
+  }
+
+  #webAccountsView .web-account-table td:nth-child(4) .link-btn{
+    display:inline-block!important;
+    width:max-content!important;
+    padding:5px 8px!important;
+    border:1px solid #CFC1B4!important;
+    border-radius:6px!important;
+    background:#FFF9F4!important;
+    text-decoration:none!important;
+  }
+
+  #webAccountsView .web-account-table td:nth-child(5){
+    display:flex!important;
+    gap:7px!important;
+    padding-top:9px!important;
+    margin-top:4px!important;
+    border-top:1px solid #E4D9CE!important;
+  }
+
+  #webAccountsView .web-account-table td:nth-child(5)::before{
+    display:none!important;
+    content:""!important;
+  }
+
+  #webAccountsView .web-account-table td:nth-child(5) .link-btn{
+    flex:1!important;
+    padding:7px 6px!important;
+    border:1px solid #CFC1B4!important;
+    border-radius:7px!important;
+    background:#FFF9F4!important;
+    text-align:center!important;
+    text-decoration:none!important;
+    font-size:11px!important;
+  }
+
+  #webAccountsView .web-account-toolbar input{
+    max-width:none!important;
+  }
+
+  #webAccountsView .detail-body{
+    padding:12px!important;
+  }
+
+  #webAccountModal .form-grid{
+    grid-template-columns:1fr!important;
+  }
+
+  #webAccountModal .field.full{
+    grid-column:auto!important;
+  }
+
+  #webAccountModal .password-field-wrap{
+    flex-direction:column!important;
+    align-items:stretch!important;
+  }
+
+  #webAccountModal .password-field-wrap button{
+    width:100%!important;
+  }
+}
+
+@media(max-width:420px){
+  #webAccountsView .web-account-table td{
+    grid-template-columns:82px minmax(0,1fr)!important;
+  }
+}
+
 </style>
 </head>
 <body class="logged-out">

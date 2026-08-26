@@ -1877,6 +1877,37 @@ img,svg{max-width:100%;height:auto}
   }
 }
 
+
+/* ===== IWRS 帳號搜尋 / 篩選 / 15筆分頁 ===== */
+.iwrs-account-filterbar{
+  display:grid;
+  grid-template-columns:minmax(260px,1fr) minmax(180px,260px);
+  gap:10px;
+  margin:0 0 10px;
+}
+.iwrs-account-filterbar input,
+.iwrs-account-filterbar select{
+  width:100%;
+  background:#FFFDFB!important;
+  border-color:#D3C6BA!important;
+}
+.iwrs-account-pagination{
+  margin-top:0!important;
+}
+@media(max-width:760px){
+  .iwrs-account-filterbar{
+    grid-template-columns:1fr;
+  }
+  .iwrs-account-pagination{
+    align-items:flex-start!important;
+    flex-direction:column!important;
+  }
+  .iwrs-account-pagination .page-controls{
+    width:100%!important;
+    justify-content:space-between!important;
+  }
+}
+
 </style>
 </head>
 <body class="logged-out">
@@ -2029,10 +2060,20 @@ img,svg{max-width:100%;height:auto}
       </table>
     </div>
     <h3 style="margin-top:28px">IWRS 帳號</h3>
+
+    <div class="iwrs-account-filterbar">
+      <input id="iwrsAccountKeyword" placeholder="搜尋 IWRS、Login ID…">
+      <select id="iwrsAccountFilter">
+        <option value="">全部 IWRS</option>
+      </select>
+    </div>
+
     <div class="table-wrap"><table style="min-width:800px">
       <thead><tr><th>IWRS</th><th>Login ID</th><th>Password</th><th>使用案件數</th><th>操作</th></tr></thead>
       <tbody id="accountTableBody"></tbody>
     </table></div>
+
+    <div id="iwrsAccountPagination" class="pagination-bar iwrs-account-pagination"></div>
   </div>
 </div>
 
@@ -2171,6 +2212,8 @@ let trials=[];
 let iwrsOptions=[];
 let iwrsAccounts=[];
 let webAccounts=[];
+let iwrsAccountPage=1;
+const iwrsAccountPageSize=15;
 let currentDetailId=null;
 let statusFilter='';
 let currentPage=1;
@@ -2662,6 +2705,7 @@ function openIwrsMaintenance(){
   $("listView").style.display="none";
   $("detailView").classList.remove("show");
   $("iwrsView").classList.add("show");
+  renderIwrsAccountFilterOptions();
   renderIwrsTable();
   renderAccountTable();
 }
@@ -2694,14 +2738,117 @@ function renderIwrsTable(){
 }
 
 
+function renderIwrsAccountFilterOptions(){
+ const select=$("iwrsAccountFilter");
+ if(!select)return;
+
+ const current=select.value||"";
+ select.innerHTML='<option value="">全部 IWRS</option>'+
+   iwrsOptions.map(i=>'<option value="'+i.iwrs_id+'">'+esc(i.iwrs_name)+'</option>').join("");
+
+ if([...select.options].some(o=>o.value===current)){
+   select.value=current;
+ }
+}
+
+function renderIwrsAccountPagination(totalRows,totalPages){
+ const el=$("iwrsAccountPagination");
+ if(!el)return;
+
+ if(totalRows===0){
+   el.innerHTML="";
+   return;
+ }
+
+ const from=(iwrsAccountPage-1)*iwrsAccountPageSize+1;
+ const to=Math.min(iwrsAccountPage*iwrsAccountPageSize,totalRows);
+
+ el.innerHTML=
+   '<span class="page-info">顯示 '+from+'–'+to+'，共 '+totalRows+' 筆帳號</span>'+
+   '<div class="page-controls">'+
+     '<button class="page-btn" '+(iwrsAccountPage<=1?'disabled':'')+
+       ' onclick="changeIwrsAccountPage('+(iwrsAccountPage-1)+')">‹ 上一頁</button>'+
+     '<span class="page-number">第 '+iwrsAccountPage+' / '+totalPages+' 頁</span>'+
+     '<button class="page-btn" '+(iwrsAccountPage>=totalPages?'disabled':'')+
+       ' onclick="changeIwrsAccountPage('+(iwrsAccountPage+1)+')">下一頁 ›</button>'+
+   '</div>';
+}
+
+function changeIwrsAccountPage(page){
+ iwrsAccountPage=page;
+ renderAccountTable();
+}
+
+function resetIwrsAccountPage(){
+ iwrsAccountPage=1;
+ renderAccountTable();
+}
+
 function renderAccountTable(){
- const body=$("accountTableBody"); if(!body)return;
- if(!iwrsAccounts.length){body.innerHTML='<tr><td colspan="7" class="empty">目前尚未建立 IWRS 帳號</td></tr>';return}
- body.innerHTML=iwrsAccounts.map(a=>{
+ const body=$("accountTableBody");
+ if(!body)return;
+
+ const keyword=($("iwrsAccountKeyword")?.value||"").trim().toLowerCase();
+ const iwrsId=Number($("iwrsAccountFilter")?.value)||null;
+
+ const filtered=iwrsAccounts.filter(a=>{
+   const iw=iwrsOptions.find(i=>i.iwrs_id===a.iwrs_id);
+   const iwrsName=iw?iw.iwrs_name:"未知 IWRS";
+
+   const matchesKeyword=!keyword||
+     [iwrsName,a.login_id].join(" ").toLowerCase().includes(keyword);
+
+   const matchesIwrs=!iwrsId||a.iwrs_id===iwrsId;
+
+   return matchesKeyword&&matchesIwrs;
+ }).sort((a,b)=>{
+   const iwA=iwrsOptions.find(i=>i.iwrs_id===a.iwrs_id);
+   const iwB=iwrsOptions.find(i=>i.iwrs_id===b.iwrs_id);
+   const nameA=iwA?iwA.iwrs_name:"";
+   const nameB=iwB?iwB.iwrs_name:"";
+
+   // 選擇「全部 IWRS」時，先依 IWRS 名稱字母順序排列。
+   // 同一 IWRS 內再依 Login ID 排列，讓結果固定且容易尋找。
+   if(!iwrsId){
+     const iwrsCompare=nameA.localeCompare(nameB,"en",{sensitivity:"base",numeric:true});
+     if(iwrsCompare!==0)return iwrsCompare;
+   }
+
+   return String(a.login_id||"").localeCompare(
+     String(b.login_id||""),"en",{sensitivity:"base",numeric:true}
+   );
+ });
+
+ const totalPages=Math.max(1,Math.ceil(filtered.length/iwrsAccountPageSize));
+ if(iwrsAccountPage>totalPages)iwrsAccountPage=totalPages;
+ if(iwrsAccountPage<1)iwrsAccountPage=1;
+
+ const start=(iwrsAccountPage-1)*iwrsAccountPageSize;
+ const pageRows=filtered.slice(start,start+iwrsAccountPageSize);
+
+ if(!pageRows.length){
+   body.innerHTML='<tr><td colspan="5" class="empty">目前沒有符合條件的 IWRS 帳號</td></tr>';
+   renderIwrsAccountPagination(0,1);
+   return;
+ }
+
+ body.innerHTML=pageRows.map(a=>{
   const iw=iwrsOptions.find(i=>i.iwrs_id===a.iwrs_id);
   const used=trials.filter(t=>(t.iwrs||[]).some(x=>x.account_id===a.account_id)).length;
-  return '<tr><td>'+esc(iw?iw.iwrs_name:"未知 IWRS")+'</td><td><strong>'+esc(a.login_id)+'</strong></td><td>'+esc(a.password||"—")+'</td><td>'+used+'</td><td><button class="link-btn" onclick="openAccountModal('+a.account_id+')">編輯</button><button class="link-btn" onclick="deleteAccount('+a.account_id+')">刪除</button></td></tr>';
+
+  return '<tr>'+
+    '<td>'+esc(iw?iw.iwrs_name:"未知 IWRS")+'</td>'+
+    '<td><strong>'+esc(a.login_id||"—")+'</strong></td>'+
+    '<td>'+esc(a.password||"—")+'</td>'+
+    '<td>'+used+'</td>'+
+    '<td>'+
+      '<button class="link-btn" onclick="openAccountModal('+a.account_id+')">編輯</button>'+
+      '<button class="link-btn" onclick="deleteAccount('+a.account_id+')">刪除</button>'+
+    '</td>'+
+  '</tr>';
  }).join("");
+
+ renderIwrsAccountPagination(filtered.length,totalPages);
 }
 function openAccountModal(id=null){
  $("accountModal").classList.add("show"); $("accountModalTitle").textContent=id?"編輯 IWRS 帳號":"新增 IWRS 帳號"; $("editAccountId").value=id||"";
@@ -2894,6 +3041,8 @@ async function deleteTrial(id){
 
 $("keyword").addEventListener("input",()=>{currentPage=1;render()});
 if($("webAccountKeyword"))$("webAccountKeyword").addEventListener("input",renderWebAccounts);
+if($("iwrsAccountKeyword"))$("iwrsAccountKeyword").addEventListener("input",resetIwrsAccountPage);
+if($("iwrsAccountFilter"))$("iwrsAccountFilter").addEventListener("change",resetIwrsAccountPage);
 
 $("loginEmail").addEventListener("keydown",e=>{if(e.key==="Enter")signIn()});
 $("loginPassword").addEventListener("keydown",e=>{if(e.key==="Enter")signIn()});

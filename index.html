@@ -1923,7 +1923,48 @@ img,svg{max-width:100%;height:auto}
 #feeManagementBtn.fee-btn-warn{background:#fff0c9!important;border-color:#d7ae4f!important;color:#76540c!important}
 #feeManagementBtn.fee-btn-due{background:#f7dcdc!important;border-color:#c77f7f!important;color:#842f2f!important}
 .form-section-title{font-size:16px;font-weight:850;color:#5f5146;border-bottom:1px solid #d8ccc0;padding-bottom:7px;margin-top:4px}
+
+/* 試驗案清單：讓標題列、表格與分頁背景依外層卡片圓角裁切 */
+.workspace-list-card{
+  overflow:hidden!important;
+}
+.workspace-list-card .summary{
+  border-radius:11px 11px 0 0;
+}
+.workspace-list-card .pagination-bar{
+  border-radius:0 0 11px 11px;
+}
+
+/* 案件詳細資料：IWRS 欄寬與帳密單行顯示 */
+.workspace-detail .grid-display.iwrs{
+  grid-template-columns:minmax(0,.82fr) minmax(0,1.22fr) minmax(0,1.32fr) minmax(0,1fr)!important;
+}
+.workspace-detail .grid-display.iwrs > div{
+  padding:8px 9px!important;
+  font-size:12.5px!important;
+  line-height:1.4!important;
+  min-width:0;
+}
+.workspace-detail .grid-display.iwrs > .lh{
+  font-size:12px!important;
+  white-space:nowrap;
+}
+.workspace-detail .grid-display.iwrs .iwrs-login-cell,
+.workspace-detail .grid-display.iwrs .iwrs-password-cell{
+  white-space:nowrap!important;
+  word-break:normal!important;
+  overflow-x:auto;
+  overflow-y:hidden;
+  scrollbar-width:thin;
+}
+.workspace-detail .grid-display.iwrs .iwrs-url-cell{
+  white-space:nowrap;
+  font-size:12px!important;
+}
 @media(max-width:760px){
+  .workspace-detail .grid-display.iwrs{
+    grid-template-columns:1fr!important;
+  }
   .fee-summary-grid{grid-template-columns:1fr}
   .fee-payment-head{align-items:flex-start;flex-direction:column}
   .fee-payment-head button{width:100%}
@@ -3219,7 +3260,7 @@ function showDetail(id){
  const iw=t.iwrs||[];$("dIwrs").innerHTML=iw.length?'<div class="grid-display iwrs"><div class="lh">IWRS</div><div class="lh">Login ID</div><div class="lh">Password</div><div class="lh">網址</div>'+iw.map(x=>{
  const safeUrl=(x.iwrs_url||"").trim();
  const link=safeUrl?'<a class="iwrs-link" href="'+esc(safeUrl)+'" target="_blank" rel="noopener noreferrer">開啟 IWRS 網站</a>':"—";
- return '<div>'+esc(x.iwrs_name||"—")+'</div><div>'+esc(x.login_id||"—")+'</div><div>'+esc(x.password||"—")+'</div><div>'+link+'</div>';
+ return '<div class="iwrs-name-cell">'+esc(x.iwrs_name||"—")+'</div><div class="iwrs-login-cell">'+esc(x.login_id||"—")+'</div><div class="iwrs-password-cell">'+esc(x.password||"—")+'</div><div class="iwrs-url-cell">'+link+'</div>';
 }).join("")+'</div>':"目前尚未設定 IWRS。";
  renderFeeDetail(t);$("dDispensing").textContent=t.dispensing||"目前尚未輸入注意事項。";$("dDdi").textContent=t.ddi||"目前尚未輸入藥品交互作用。";
 }

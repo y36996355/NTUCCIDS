@@ -1908,6 +1908,23 @@ img,svg{max-width:100%;height:auto}
   }
 }
 
+.fee-summary-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:12px}
+.fee-summary-item{background:#fffdfb;border:1px solid #d8ccc0;border-radius:10px;padding:10px 12px}
+.fee-summary-item label{display:block;color:#78695d;font-size:12px;font-weight:800;margin-bottom:4px}
+.fee-summary-item .value{color:#4f443b;font-weight:750;word-break:break-word}
+.fee-status{display:inline-flex;align-items:center;border-radius:999px;padding:4px 9px;font-size:12px;font-weight:800}
+.fee-status.ok{background:#dfeee4;color:#356548}.fee-status.warn{background:#fff0c9;color:#805e13}
+.fee-status.due{background:#f7dcdc;color:#8b3737}.fee-status.off{background:#ebe7e2;color:#665f58}
+.fee-payment-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:14px 0 8px}
+.fee-payment-head h4{margin:0;color:#5f5146}
+.fee-payment-table{min-width:680px}
+.fee-payment-table td,.fee-payment-table th{vertical-align:middle}
+.form-section-title{font-size:16px;font-weight:850;color:#5f5146;border-bottom:1px solid #d8ccc0;padding-bottom:7px;margin-top:4px}
+@media(max-width:760px){
+  .fee-summary-grid{grid-template-columns:1fr}
+  .fee-payment-head{align-items:flex-start;flex-direction:column}
+  .fee-payment-head button{width:100%}
+}
 </style>
 </head>
 <body class="logged-out">
@@ -2025,6 +2042,14 @@ img,svg{max-width:100%;height:auto}
     </div>
     <div class="detail-section"><h3>藥品儲位</h3><div class="detail-text" id="dLocations"></div></div>
     <div class="detail-section"><h3>IWRS</h3><div class="detail-text" id="dIwrs"></div></div>
+    <div class="detail-section">
+      <h3>藥品管理費</h3>
+      <div class="detail-text">
+        <div id="dFeeSummary" class="fee-summary-grid"></div>
+        <div class="fee-payment-head"><h4>歷年繳交紀錄</h4><button class="btn-secondary btn-small" onclick="openFeePaymentModal()">＋ 新增繳交紀錄</button></div>
+        <div class="table-wrap"><table class="fee-payment-table"><thead><tr><th>年度</th><th>收費期間</th><th>繳交日期</th><th>實繳金額</th><th>備註</th><th>操作</th></tr></thead><tbody id="dFeePayments"></tbody></table></div>
+      </div>
+    </div>
     <div class="detail-section"><h3>覆核與調劑注意事項</h3><div class="detail-text" id="dDispensing"></div></div>
     <div class="detail-section"><h3>留意以下藥品交互作用</h3><div class="detail-text" id="dDdi"></div></div>
   </div>
@@ -2111,6 +2136,12 @@ img,svg{max-width:100%;height:auto}
     <div class="form-grid">
       <div class="field"><label>試驗案編號 *</label><input id="serialNo"></div>
       <div class="field"><label>Protocol No. *</label><input id="protocolNo"></div><div class="field"><label>主要試驗用藥</label><input id="mainDrug" placeholder="例如：Osimertinib"></div><div class="field"><label>試驗案狀態</label><select id="trialStatus"><option>未進行</option><option>進行中</option><option>結案</option></select></div>
+
+      <div class="field full"><div class="form-section-title">藥品管理費</div></div>
+      <div class="field"><label>第一年藥管費</label><input id="managementFeeFirstYear" type="number" min="0" step="1" placeholder="例如：45000"></div>
+      <div class="field"><label>第二年起藥管費</label><input id="managementFeeRenewal" type="number" min="0" step="1" placeholder="例如：30000"></div>
+      <div class="field"><label>首次進藥日期</label><input id="firstDrugReceivedDate" type="date"></div>
+      <div class="field"><label>提醒繳交</label><select id="managementFeeReminder"><option value="false">否</option><option value="true">是</option></select></div>
 
       <div class="field full">
         <label>藥品儲位</label>
@@ -2201,6 +2232,22 @@ img,svg{max-width:100%;height:auto}
   </div>
 </div>
 
+<div class="modal" id="feePaymentModal">
+  <div class="modal-box" style="max-width:700px">
+    <div class="modal-head"><h2 id="feePaymentModalTitle">新增藥管費繳交紀錄</h2><button class="btn-secondary" onclick="closeFeePaymentModal()">✕</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="editFeePaymentId">
+      <div class="form-grid">
+        <div class="field"><label>所屬年度 *</label><input id="feePaymentYear" type="number" min="1" step="1" placeholder="例如：1"></div>
+        <div class="field"><label>繳交日期 *</label><input id="feePaymentDate" type="date"></div>
+        <div class="field full"><label>實繳金額</label><input id="feePaymentAmount" type="number" min="0" step="1"></div>
+        <div class="field full"><label>備註</label><textarea id="feePaymentNotes" placeholder="例如：補繳、減免或其他說明"></textarea></div>
+      </div>
+    </div>
+    <div class="modal-foot"><button class="btn-secondary" onclick="closeFeePaymentModal()">取消</button><button class="btn-primary" onclick="saveFeePayment()">儲存</button></div>
+  </div>
+</div>
+
 <script>
 const SUPABASE_URL="https://fsgeuwycdxuwauyvxqti.supabase.co";
 const SUPABASE_KEY="sb_publishable_J2n_x8ep9fPq66t_9FVamQ_M9rBVXjk";
@@ -2218,6 +2265,7 @@ let currentDetailId=null;
 let statusFilter='';
 let currentPage=1;
 const pageSize=15;
+const feeReminderDays=30;
 let authSession=null;
 
 function $(id){return document.getElementById(id)}
@@ -2386,10 +2434,11 @@ async function loadAll(){
  try{
    iwrsOptions=await api("/iwrs?select=iwrs_id,iwrs_name,iwrs_url&order=iwrs_name.asc");
    iwrsAccounts=await api("/iwrs_accounts?select=account_id,iwrs_id,login_id,password&order=iwrs_id.asc,login_id.asc");
-   const rows=await api("/trials?select=trial_id,protocol_no,serial_no,main_drug,trial_status,dispensing,ddi&order=trial_id.asc");
+   const rows=await api("/trials?select=trial_id,protocol_no,serial_no,main_drug,trial_status,dispensing,ddi,management_fee_first_year,management_fee_renewal,first_drug_received_date,management_fee_reminder&order=trial_id.asc");
    for(const t of rows){
      t.locations=await api("/trial_locations?select=location_id,storage_type,location&trial_id=eq."+encodeURIComponent(t.trial_id)+"&order=location_id.asc");
      t.iwrs=await api("/trial_iwrs?select=trial_iwrs_id,account_id&trial_id=eq."+encodeURIComponent(t.trial_id)+"&order=trial_iwrs_id.asc");
+     t.fee_payments=await api("/trial_management_fee_payments?select=payment_id,trial_id,fee_year,payment_date,amount_paid,notes&trial_id=eq."+encodeURIComponent(t.trial_id)+"&order=fee_year.asc,payment_date.asc,payment_id.asc");
      t.iwrs.forEach(x=>{
        const a=iwrsAccounts.find(a=>a.account_id===x.account_id);
        const found=a?iwrsOptions.find(i=>i.iwrs_id===a.iwrs_id):null;
@@ -2418,13 +2467,13 @@ function downloadTextFile(filename, content, mime){
  setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 function exportTrialCsv(){
- const rows=[["試驗案編號","Protocol No.","主要試驗用藥","試驗案狀態","藥品儲位","IWRS","Login ID","IWRS 網址","覆核與調劑注意事項","藥品交互作用"]];
+ const rows=[["試驗案編號","Protocol No.","主要試驗用藥","試驗案狀態","第一年藥管費","第二年起藥管費","首次進藥日期","提醒繳交","藥品儲位","IWRS","Login ID","IWRS 網址","覆核與調劑注意事項","藥品交互作用"]];
  trials.forEach(t=>{
    const loc=(t.locations||[]).map(x=>(x.storage_type||"")+"｜"+(x.location||"")).join("；");
    const iwrsNames=(t.iwrs||[]).map(x=>x.iwrs_name||"").join("；");
    const logins=(t.iwrs||[]).map(x=>x.login_id||"").join("；");
    const urls=(t.iwrs||[]).map(x=>x.iwrs_url||"").join("；");
-   rows.push([t.serial_no||"",t.protocol_no||"",t.main_drug||"",t.trial_status||"未進行",loc,iwrsNames,logins,urls,t.dispensing||"",t.ddi||""]);
+   rows.push([t.serial_no||"",t.protocol_no||"",t.main_drug||"",t.trial_status||"未進行",t.management_fee_first_year??"",t.management_fee_renewal??"",t.first_drug_received_date||"",t.management_fee_reminder?"是":"否",loc,iwrsNames,logins,urls,t.dispensing||"",t.ddi||""]);
  });
  const csv="\ufeff"+rows.map(r=>r.map(csvEscape).join(",")).join("\r\n");
  const d=new Date().toISOString().slice(0,10);
@@ -2435,7 +2484,7 @@ function exportFullBackup(){
  const ok=confirm("完整備份 JSON 會包含 IWRS Login ID 與 Password。\n\n請只保存於受控、安全的位置。是否繼續？");
  if(!ok)return;
  const backup={
-   backup_version:1,
+   backup_version:2,
    exported_at:new Date().toISOString(),
    trials:trials.map(t=>({
      trial_id:t.trial_id,
@@ -2445,8 +2494,13 @@ function exportFullBackup(){
      trial_status:t.trial_status,
      dispensing:t.dispensing,
      ddi:t.ddi,
+     management_fee_first_year:t.management_fee_first_year,
+     management_fee_renewal:t.management_fee_renewal,
+     first_drug_received_date:t.first_drug_received_date,
+     management_fee_reminder:t.management_fee_reminder,
      locations:t.locations||[],
-     trial_iwrs:(t.iwrs||[]).map(x=>({trial_iwrs_id:x.trial_iwrs_id,account_id:x.account_id}))
+     trial_iwrs:(t.iwrs||[]).map(x=>({trial_iwrs_id:x.trial_iwrs_id,account_id:x.account_id})),
+     management_fee_payments:t.fee_payments||[]
    })),
    iwrs:iwrsOptions,
    iwrs_accounts:iwrsAccounts
@@ -2993,20 +3047,22 @@ function openModal(id=null){
  if(id){
   const t=trials.find(x=>x.trial_id===id);if(!t)return;
   $("serialNo").value=t.serial_no||"";$("protocolNo").value=t.protocol_no||"";$("mainDrug").value=t.main_drug||"";$("trialStatus").value=t.trial_status||"未進行";$("dispensing").value=t.dispensing||"";$("ddi").value=t.ddi||"";
+  $("managementFeeFirstYear").value=t.management_fee_first_year??"";$("managementFeeRenewal").value=t.management_fee_renewal??"";$("firstDrugReceivedDate").value=t.first_drug_received_date||"";$("managementFeeReminder").value=t.management_fee_reminder?"true":"false";
   (t.locations||[]).forEach(x=>addLocationRow(x.storage_type||"",x.location||""));
   (t.iwrs||[]).forEach(x=>addIwrsRow(x.account_id));
- }else{$("serialNo").value="";$("protocolNo").value="";$("mainDrug").value="";$("trialStatus").value="未進行";$("dispensing").value="";$("ddi").value=""}
+ }else{$("serialNo").value="";$("protocolNo").value="";$("mainDrug").value="";$("trialStatus").value="未進行";$("dispensing").value="";$("ddi").value="";$("managementFeeFirstYear").value="";$("managementFeeRenewal").value="";$("firstDrugReceivedDate").value="";$("managementFeeReminder").value="false"}
 }
 function closeModal(){$("modal").classList.remove("show")}
 
 async function saveTrial(){
  const serial_no=$("serialNo").value.trim(),protocol_no=$("protocolNo").value.trim(),main_drug=$("mainDrug").value.trim(),trial_status=$("trialStatus").value,dispensing=$("dispensing").value.trim(),ddi=$("ddi").value.trim();
+ const management_fee_first_year=$("managementFeeFirstYear").value===""?null:Number($("managementFeeFirstYear").value),management_fee_renewal=$("managementFeeRenewal").value===""?null:Number($("managementFeeRenewal").value),first_drug_received_date=$("firstDrugReceivedDate").value||null,management_fee_reminder=$("managementFeeReminder").value==="true";
  const locations=getLocations(),iwrsRows=getIwrs(),editId=$("editId").value;
  if(!serial_no||!protocol_no){alert("請至少填寫：試驗案編號、Protocol No.");return}
  if(iwrsRows.some(x=>!x.account_id)){alert("請選擇 IWRS 帳號。");return}
  setBusy(true);
  try{
-  let trial_id;const payload={serial_no,protocol_no,main_drug:main_drug||null,trial_status,dispensing,ddi};
+  let trial_id;const payload={serial_no,protocol_no,main_drug:main_drug||null,trial_status,dispensing,ddi,management_fee_first_year,management_fee_renewal,first_drug_received_date,management_fee_reminder};
   if(editId){
    const result=await api("/trials?trial_id=eq."+encodeURIComponent(editId),{method:"PATCH",headers:{"Prefer":"return=representation"},body:JSON.stringify(payload)});
    if(!result||!result.length)throw new Error("更新後沒有取得試驗案資料。請檢查 RLS UPDATE / SELECT policy。");
@@ -3024,6 +3080,109 @@ async function saveTrial(){
  }catch(e){showBanner("儲存失敗："+e.message,"error")}finally{setBusy(false)}
 }
 
+function parseDateOnly(value){
+ if(!value)return null;
+ const parts=String(value).split("-").map(Number);
+ if(parts.length!==3||parts.some(Number.isNaN))return null;
+ return new Date(parts[0],parts[1]-1,parts[2]);
+}
+function formatDateOnly(date){
+ if(!date)return "—";
+ const y=date.getFullYear(),m=String(date.getMonth()+1).padStart(2,"0"),d=String(date.getDate()).padStart(2,"0");
+ return y+"-"+m+"-"+d;
+}
+function addDays(date,days){const d=new Date(date);d.setDate(d.getDate()+days);return d}
+function addYearsSafe(date,years){
+ const targetYear=date.getFullYear()+years,targetMonth=date.getMonth();
+ const lastDay=new Date(targetYear,targetMonth+1,0).getDate();
+ return new Date(targetYear,targetMonth,Math.min(date.getDate(),lastDay));
+}
+function formatMoney(value){
+ if(value===null||value===undefined||value==="")return "—";
+ const n=Number(value);return Number.isFinite(n)?"NT$ "+n.toLocaleString("zh-TW",{maximumFractionDigits:2}):"—";
+}
+function getFeePeriod(t,year){
+ const first=parseDateOnly(t.first_drug_received_date);
+ if(!first||!Number.isInteger(year)||year<1)return null;
+ const start=addYearsSafe(first,year-1),next=addYearsSafe(first,year);
+ return {start,end:addDays(next,-1),next};
+}
+function getCurrentFeeYear(t,today=new Date()){
+ const first=parseDateOnly(t.first_drug_received_date);
+ if(!first)return null;
+ const now=new Date(today.getFullYear(),today.getMonth(),today.getDate());
+ if(now<first)return 0;
+ let completed=now.getFullYear()-first.getFullYear();
+ if(now<addYearsSafe(first,completed))completed--;
+ return completed+1;
+}
+function paymentExistsForYear(t,year){return (t.fee_payments||[]).some(p=>Number(p.fee_year)===year)}
+function getFeeReminderState(t){
+ if(!t.first_drug_received_date)return {className:"off",text:"尚未進藥，不計算"};
+ const currentYear=getCurrentFeeYear(t);
+ if(currentYear===0)return {className:"off",text:"尚未到首次進藥日"};
+ if(!t.management_fee_reminder)return {className:"off",text:"未啟用提醒"};
+ if(!paymentExistsForYear(t,currentYear))return {className:"due",text:"第 "+currentYear+" 年度待繳"};
+ const nextYear=currentYear+1,nextPeriod=getFeePeriod(t,nextYear);
+ const now=new Date();now.setHours(0,0,0,0);
+ const days=Math.ceil((nextPeriod.start-now)/86400000);
+ if(days>=0&&days<=feeReminderDays&&!paymentExistsForYear(t,nextYear))return {className:"warn",text:"第 "+nextYear+" 年度將於 "+days+" 天後續繳"};
+ return {className:"ok",text:"本年度已有繳交紀錄"};
+}
+function renderFeeDetail(t){
+ const currentYear=getCurrentFeeYear(t),state=getFeeReminderState(t);
+ const period=currentYear&&currentYear>0?getFeePeriod(t,currentYear):null;
+ const currentAmount=currentYear===1?t.management_fee_first_year:(currentYear&&currentYear>1?t.management_fee_renewal:null);
+ $("dFeeSummary").innerHTML=
+  '<div class="fee-summary-item"><label>第一年藥管費</label><div class="value">'+esc(formatMoney(t.management_fee_first_year))+'</div></div>'+
+  '<div class="fee-summary-item"><label>第二年起藥管費</label><div class="value">'+esc(formatMoney(t.management_fee_renewal))+'</div></div>'+
+  '<div class="fee-summary-item"><label>首次進藥日期</label><div class="value">'+esc(t.first_drug_received_date||"—")+'</div></div>'+
+  '<div class="fee-summary-item"><label>目前收費年度</label><div class="value">'+esc(currentYear===null?"尚未設定":currentYear===0?"尚未起算":"第 "+currentYear+" 年度")+'</div></div>'+
+  '<div class="fee-summary-item"><label>本期起訖日</label><div class="value">'+esc(period?formatDateOnly(period.start)+"～"+formatDateOnly(period.end):"—")+'</div></div>'+
+  '<div class="fee-summary-item"><label>本期應用金額</label><div class="value">'+esc(formatMoney(currentAmount))+'</div></div>'+
+  '<div class="fee-summary-item"><label>提醒繳交</label><div class="value">'+(t.management_fee_reminder?"是":"否")+'</div></div>'+
+  '<div class="fee-summary-item"><label>目前狀態</label><div class="value"><span class="fee-status '+state.className+'">'+esc(state.text)+'</span></div></div>';
+
+ const payments=[...(t.fee_payments||[])].sort((a,b)=>Number(a.fee_year)-Number(b.fee_year)||String(a.payment_date||"").localeCompare(String(b.payment_date||""))||Number(a.payment_id)-Number(b.payment_id));
+ $("dFeePayments").innerHTML=payments.length?payments.map(p=>{
+   const pPeriod=getFeePeriod(t,Number(p.fee_year));
+   return '<tr><td>第 '+esc(p.fee_year)+' 年</td><td>'+esc(pPeriod?formatDateOnly(pPeriod.start)+"～"+formatDateOnly(pPeriod.end):"尚未起算")+'</td><td>'+esc(p.payment_date||"—")+'</td><td>'+esc(formatMoney(p.amount_paid))+'</td><td>'+esc(p.notes||"—")+'</td><td><button class="btn-secondary btn-small" onclick="openFeePaymentModal('+p.payment_id+')">編輯</button> <button class="btn-danger btn-small" onclick="deleteFeePayment('+p.payment_id+')">刪除</button></td></tr>';
+ }).join(""):'<tr><td colspan="6" class="empty">目前尚無藥管費繳交紀錄。</td></tr>';
+}
+
+function openFeePaymentModal(paymentId=null){
+ const t=trials.find(x=>x.trial_id===currentDetailId);if(!t){showBanner("請先選擇試驗案。","error");return}
+ const payment=(t.fee_payments||[]).find(p=>p.payment_id===paymentId);
+ $("feePaymentModal").classList.add("show");$("feePaymentModalTitle").textContent=payment?"編輯藥管費繳交紀錄":"新增藥管費繳交紀錄";$("editFeePaymentId").value=paymentId||"";
+ const suggestedYear=Math.max(1,getCurrentFeeYear(t)||1);
+ $("feePaymentYear").value=payment?payment.fee_year:suggestedYear;
+ $("feePaymentDate").value=payment?payment.payment_date:formatDateOnly(new Date());
+ $("feePaymentAmount").value=payment?(payment.amount_paid??""):(suggestedYear===1?(t.management_fee_first_year??""):(t.management_fee_renewal??""));
+ $("feePaymentNotes").value=payment?payment.notes||"":"";
+}
+function closeFeePaymentModal(){$("feePaymentModal").classList.remove("show")}
+async function saveFeePayment(){
+ const t=trials.find(x=>x.trial_id===currentDetailId);if(!t)return;
+ const fee_year=Number($("feePaymentYear").value),payment_date=$("feePaymentDate").value,amount_paid=$("feePaymentAmount").value===""?null:Number($("feePaymentAmount").value),notes=$("feePaymentNotes").value.trim()||null,paymentId=$("editFeePaymentId").value;
+ if(!Number.isInteger(fee_year)||fee_year<1){alert("所屬年度必須是 1 以上的整數。");return}
+ if(!payment_date){alert("請選擇繳交日期。");return}
+ const payload={trial_id:t.trial_id,fee_year,payment_date,amount_paid,notes};
+ setBusy(true);
+ try{
+  if(paymentId)await api("/trial_management_fee_payments?payment_id=eq."+encodeURIComponent(paymentId),{method:"PATCH",headers:{"Prefer":"return=minimal"},body:JSON.stringify(payload)});
+  else await api("/trial_management_fee_payments",{method:"POST",headers:{"Prefer":"return=minimal"},body:JSON.stringify(payload)});
+  closeFeePaymentModal();await loadAll();showDetail(t.trial_id);showBanner("藥管費繳交紀錄已儲存。","ok");
+ }catch(e){showBanner("繳交紀錄儲存失敗："+e.message,"error")}finally{setBusy(false)}
+}
+async function deleteFeePayment(paymentId){
+ const t=trials.find(x=>x.trial_id===currentDetailId);if(!t)return;
+ const payment=(t.fee_payments||[]).find(p=>p.payment_id===paymentId);if(!payment)return;
+ if(!confirm("確定要刪除第 "+payment.fee_year+" 年度、"+(payment.payment_date||"")+"的繳交紀錄嗎？"))return;
+ setBusy(true);
+ try{await api("/trial_management_fee_payments?payment_id=eq."+encodeURIComponent(paymentId),{method:"DELETE",headers:{"Prefer":"return=minimal"}});await loadAll();showDetail(t.trial_id);showBanner("藥管費繳交紀錄已刪除。","ok")}
+ catch(e){showBanner("繳交紀錄刪除失敗："+e.message,"error")}finally{setBusy(false)}
+}
+
 function showDetail(id){
  const t=trials.find(x=>x.trial_id===id);if(!t)return;currentDetailId=id;$("detailView").classList.remove("detail-empty");
  $("detailTitle").textContent=(t.serial_no||t.protocol_no||"試驗案")+"｜詳細資料";$("dSerial").textContent=t.serial_no||"—";$("dProtocol").textContent=t.protocol_no||"—";$("dMainDrug").textContent=t.main_drug||"—";const ds=t.trial_status||"未進行";const dc=ds==="進行中"?"status-active":ds==="結案"?"status-closed":"status-notstarted";$("dTrialStatus").innerHTML='<span class="status-pill '+dc+'">'+esc(ds)+"</span>";
@@ -3033,14 +3192,14 @@ function showDetail(id){
  const link=safeUrl?'<a class="iwrs-link" href="'+esc(safeUrl)+'" target="_blank" rel="noopener noreferrer">開啟 IWRS 網站</a>':"—";
  return '<div>'+esc(x.iwrs_name||"—")+'</div><div>'+esc(x.login_id||"—")+'</div><div>'+esc(x.password||"—")+'</div><div>'+link+'</div>';
 }).join("")+'</div>':"目前尚未設定 IWRS。";
- $("dDispensing").textContent=t.dispensing||"目前尚未輸入注意事項。";$("dDdi").textContent=t.ddi||"目前尚未輸入藥品交互作用。";
+ renderFeeDetail(t);$("dDispensing").textContent=t.dispensing||"目前尚未輸入注意事項。";$("dDdi").textContent=t.ddi||"目前尚未輸入藥品交互作用。";
 }
 function closeDetail(){currentDetailId=null;$("detailView").classList.add("detail-empty")}
 function editTrial(id){openModal(id)}function editFromDetail(){if(currentDetailId)openModal(currentDetailId)}
 
 async function deleteTrial(id){
  const t=trials.find(x=>x.trial_id===id);if(!t)return;
- if(!confirm("確定要刪除「"+(t.serial_no||t.protocol_no)+"」嗎？\\n\\n其藥品儲位與 IWRS 關聯也會一併刪除。"))return;
+ if(!confirm("確定要刪除「"+(t.serial_no||t.protocol_no)+"」嗎？\\n\\n其藥品儲位、IWRS 關聯與歷年藥管費繳交紀錄也會一併刪除。"))return;
  setBusy(true);
  try{
   await api("/trials?trial_id=eq."+encodeURIComponent(id),{method:"DELETE",headers:{"Prefer":"return=minimal"}});
@@ -3055,7 +3214,7 @@ if($("iwrsAccountFilter"))$("iwrsAccountFilter").addEventListener("change",reset
 
 $("loginEmail").addEventListener("keydown",e=>{if(e.key==="Enter")signIn()});
 $("loginPassword").addEventListener("keydown",e=>{if(e.key==="Enter")signIn()});
-document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeModal();closeIwrsModal();closeAccountModal()}});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeModal();closeIwrsModal();closeAccountModal();closeFeePaymentModal()}});
 
 async function restoreAuth(){
   loadStoredSession();

@@ -1919,11 +1919,16 @@ img,svg{max-width:100%;height:auto}
 .fee-payment-head h4{margin:0;color:#5f5146}
 .fee-payment-table{min-width:680px}
 .fee-payment-table td,.fee-payment-table th{vertical-align:middle}
+.fee-management-modal-box{width:min(1000px,calc(100vw - 28px))}
+#feeManagementBtn.fee-btn-warn{background:#fff0c9!important;border-color:#d7ae4f!important;color:#76540c!important}
+#feeManagementBtn.fee-btn-due{background:#f7dcdc!important;border-color:#c77f7f!important;color:#842f2f!important}
 .form-section-title{font-size:16px;font-weight:850;color:#5f5146;border-bottom:1px solid #d8ccc0;padding-bottom:7px;margin-top:4px}
 @media(max-width:760px){
   .fee-summary-grid{grid-template-columns:1fr}
   .fee-payment-head{align-items:flex-start;flex-direction:column}
   .fee-payment-head button{width:100%}
+  .fee-management-modal-box{width:calc(100vw - 16px)!important;max-height:94vh}
+  .detail-head>div{display:flex;flex-wrap:wrap;gap:6px}
 }
 </style>
 </head>
@@ -2033,7 +2038,7 @@ img,svg{max-width:100%;height:auto}
       <div id="detailView" class="card workspace-detail">
   <div class="detail-head">
     <h2 id="detailTitle">案件詳細資料</h2>
-    <div><button class="btn-secondary" onclick="editFromDetail()">編輯此案件</button></div>
+    <div><button id="feeManagementBtn" class="btn-secondary" onclick="openFeeManagementModal()">藥品管理費</button> <button class="btn-secondary" onclick="editFromDetail()">編輯此案件</button></div>
   </div>
   <div class="detail-body">
     <div class="detail-grid">
@@ -2042,14 +2047,6 @@ img,svg{max-width:100%;height:auto}
     </div>
     <div class="detail-section"><h3>藥品儲位</h3><div class="detail-text" id="dLocations"></div></div>
     <div class="detail-section"><h3>IWRS</h3><div class="detail-text" id="dIwrs"></div></div>
-    <div class="detail-section">
-      <h3>藥品管理費</h3>
-      <div class="detail-text">
-        <div id="dFeeSummary" class="fee-summary-grid"></div>
-        <div class="fee-payment-head"><h4>歷年繳交紀錄</h4><button class="btn-secondary btn-small" onclick="openFeePaymentModal()">＋ 新增繳交紀錄</button></div>
-        <div class="table-wrap"><table class="fee-payment-table"><thead><tr><th>年度</th><th>收費期間</th><th>繳交日期</th><th>實繳金額</th><th>備註</th><th>操作</th></tr></thead><tbody id="dFeePayments"></tbody></table></div>
-      </div>
-    </div>
     <div class="detail-section"><h3>覆核與調劑注意事項</h3><div class="detail-text" id="dDispensing"></div></div>
     <div class="detail-section"><h3>留意以下藥品交互作用</h3><div class="detail-text" id="dDdi"></div></div>
   </div>
@@ -2229,6 +2226,18 @@ img,svg{max-width:100%;height:auto}
       <button class="btn-secondary" onclick="closeWebAccountModal()">取消</button>
       <button class="btn-primary" onclick="saveWebAccount()">儲存</button>
     </div>
+  </div>
+</div>
+
+<div class="modal" id="feeManagementModal">
+  <div class="modal-box fee-management-modal-box" style="max-width:1000px">
+    <div class="modal-head"><h2 id="feeManagementModalTitle">藥品管理費</h2><button class="btn-secondary" onclick="closeFeeManagementModal()">✕</button></div>
+    <div class="modal-body">
+      <div id="dFeeSummary" class="fee-summary-grid"></div>
+      <div class="fee-payment-head"><h4>歷年繳交紀錄</h4><button class="btn-secondary btn-small" onclick="openFeePaymentModal()">＋ 新增繳交紀錄</button></div>
+      <div class="table-wrap"><table class="fee-payment-table"><thead><tr><th>年度</th><th>收費期間</th><th>繳交日期</th><th>實繳金額</th><th>備註</th><th>操作</th></tr></thead><tbody id="dFeePayments"></tbody></table></div>
+    </div>
+    <div class="modal-foot"><button class="btn-secondary" onclick="closeFeeManagementModal()">關閉</button><button class="btn-primary" onclick="editFeeSettingsFromModal()">編輯藥管費設定</button></div>
   </div>
 </div>
 
@@ -3148,6 +3157,26 @@ function renderFeeDetail(t){
    const pPeriod=getFeePeriod(t,Number(p.fee_year));
    return '<tr><td>第 '+esc(p.fee_year)+' 年</td><td>'+esc(pPeriod?formatDateOnly(pPeriod.start)+"～"+formatDateOnly(pPeriod.end):"尚未起算")+'</td><td>'+esc(p.payment_date||"—")+'</td><td>'+esc(formatMoney(p.amount_paid))+'</td><td>'+esc(p.notes||"—")+'</td><td><button class="btn-secondary btn-small" onclick="openFeePaymentModal('+p.payment_id+')">編輯</button> <button class="btn-danger btn-small" onclick="deleteFeePayment('+p.payment_id+')">刪除</button></td></tr>';
  }).join(""):'<tr><td colspan="6" class="empty">目前尚無藥管費繳交紀錄。</td></tr>';
+
+ const feeBtn=$("feeManagementBtn");
+ if(feeBtn){
+  feeBtn.classList.remove("fee-btn-warn","fee-btn-due");
+  if(state.className==="warn")feeBtn.classList.add("fee-btn-warn");
+  if(state.className==="due")feeBtn.classList.add("fee-btn-due");
+  feeBtn.textContent=state.className==="warn"?"藥品管理費｜即將續繳":state.className==="due"?"藥品管理費｜待繳":"藥品管理費";
+ }
+}
+
+function openFeeManagementModal(){
+ const t=trials.find(x=>x.trial_id===currentDetailId);if(!t){showBanner("請先選擇試驗案。","error");return}
+ renderFeeDetail(t);
+ $("feeManagementModalTitle").textContent=(t.serial_no||t.protocol_no||"試驗案")+"｜藥品管理費";
+ $("feeManagementModal").classList.add("show");
+}
+function closeFeeManagementModal(){$("feeManagementModal").classList.remove("show")}
+function editFeeSettingsFromModal(){
+ const id=currentDetailId;if(!id)return;
+ closeFeeManagementModal();openModal(id);
 }
 
 function openFeePaymentModal(paymentId=null){
@@ -3194,7 +3223,7 @@ function showDetail(id){
 }).join("")+'</div>':"目前尚未設定 IWRS。";
  renderFeeDetail(t);$("dDispensing").textContent=t.dispensing||"目前尚未輸入注意事項。";$("dDdi").textContent=t.ddi||"目前尚未輸入藥品交互作用。";
 }
-function closeDetail(){currentDetailId=null;$("detailView").classList.add("detail-empty")}
+function closeDetail(){currentDetailId=null;closeFeeManagementModal();$("detailView").classList.add("detail-empty")}
 function editTrial(id){openModal(id)}function editFromDetail(){if(currentDetailId)openModal(currentDetailId)}
 
 async function deleteTrial(id){
@@ -3214,7 +3243,7 @@ if($("iwrsAccountFilter"))$("iwrsAccountFilter").addEventListener("change",reset
 
 $("loginEmail").addEventListener("keydown",e=>{if(e.key==="Enter")signIn()});
 $("loginPassword").addEventListener("keydown",e=>{if(e.key==="Enter")signIn()});
-document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeModal();closeIwrsModal();closeAccountModal();closeFeePaymentModal()}});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeModal();closeIwrsModal();closeAccountModal();closeFeePaymentModal();closeFeeManagementModal()}});
 
 async function restoreAuth(){
   loadStoredSession();

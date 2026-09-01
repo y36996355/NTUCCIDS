@@ -2537,13 +2537,22 @@ function sortedLocations(locations){
 function render(){
  const q=$("keyword").value.trim().toLowerCase();
 
- const rows=trials.filter(t=>{
+ let rows=trials.filter(t=>{
    const loc=(t.locations||[]).map(x=>(x.storage_type||"")+" "+(x.location||"")).join(" ");
    const iw=(t.iwrs||[]).map(x=>(x.iwrs_name||"")+" "+(x.login_id||"")).join(" ");
    const matchesText=!q||[t.serial_no,t.protocol_no,t.main_drug,t.trial_status,t.dispensing,t.ddi,loc,iw].join(" ").toLowerCase().includes(q);
    const matchesStatus=!statusFilter||t.trial_status===statusFilter;
    return matchesText&&matchesStatus;
  });
+
+ // 依試驗案編號由小到大自然排序，例如 1, 2, 10；T1, T2, T10
+ rows.sort((a,b)=>
+   String(a.serial_no||"").localeCompare(
+     String(b.serial_no||""),
+     "zh-Hant",
+     {numeric:true,sensitivity:"base"}
+   )
+ );
 
  $("statAll").textContent=trials.length;
  $("statActive").textContent=trials.filter(t=>t.trial_status==="進行中").length;

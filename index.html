@@ -1961,7 +1961,35 @@ img,svg{max-width:100%;height:auto}
   white-space:nowrap;
   font-size:12px!important;
 }
+
+/* 試驗案清單：八欄欄寬與藥管費 Badge */
+.workspace-list-card th:nth-child(1),.workspace-list-card td:nth-child(1){width:11%!important}
+.workspace-list-card th:nth-child(2),.workspace-list-card td:nth-child(2){width:14%!important}
+.workspace-list-card th:nth-child(3),.workspace-list-card td:nth-child(3){width:14%!important}
+.workspace-list-card th:nth-child(4),.workspace-list-card td:nth-child(4){width:10%!important}
+.workspace-list-card th:nth-child(5),.workspace-list-card td:nth-child(5){width:11%!important}
+.workspace-list-card th:nth-child(6),.workspace-list-card td:nth-child(6){width:20%!important}
+.workspace-list-card th:nth-child(7),.workspace-list-card td:nth-child(7){width:10%!important}
+.workspace-list-card th:nth-child(8),.workspace-list-card td:nth-child(8){width:10%!important}
+.workspace-list-card th:nth-child(7),.workspace-list-card td:nth-child(7){white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fee-list-badge{display:inline-flex;align-items:center;justify-content:center;padding:3px 6px;border-radius:999px;font-size:10.5px;font-weight:800;line-height:1.25;white-space:nowrap}
+.fee-list-badge.ok{background:#dfeee4;color:#356548}
+.fee-list-badge.warn{background:#fff0c9;color:#805e13}
+.fee-list-badge.due{background:#f7dcdc;color:#8b3737}
+.fee-list-badge.off{background:#ebe7e2;color:#665f58}
 @media(max-width:760px){
+  .workspace-list-card td:nth-child(5)::before{content:"藥管費"!important}
+  .workspace-list-card td:nth-child(6)::before{content:"藥品儲位"!important}
+  .workspace-list-card td:nth-child(7)::before{content:"IWRS"!important}
+  .workspace-list-card td:nth-child(8)::before{content:""!important;display:none!important}
+  .workspace-list-card td:nth-child(8){display:flex!important;gap:6px!important;padding-top:8px!important;border-top:1px solid #E4D9CE!important;margin-top:5px!important}
+  .workspace-list-card td.mobile-iwrs-cell{border-top:0!important;margin-top:0!important}
+  .workspace-list-card th:nth-child(5),.workspace-list-card td:nth-child(5),
+  .workspace-list-card th:nth-child(6),.workspace-list-card td:nth-child(6),
+  .workspace-list-card th:nth-child(7),.workspace-list-card td:nth-child(7),
+  .workspace-list-card th:nth-child(8),.workspace-list-card td:nth-child(8){width:100%!important;max-width:100%!important}
+  .workspace-list-card td:nth-child(7){white-space:normal!important;overflow:visible!important}
+  .workspace-list-card td:nth-child(8) .link-btn{flex:1!important}
   .workspace-detail .grid-display.iwrs{
     grid-template-columns:1fr!important;
   }
@@ -2060,7 +2088,7 @@ img,svg{max-width:100%;height:auto}
     <div class="summary"><strong>試驗案清單</strong><span id="count"></span></div>
     <div class="table-wrap">
       <table>
-        <thead><tr><th>試驗案編號</th><th>Protocol No.</th><th>主要試驗用藥</th><th>試驗案狀態</th><th>藥品儲位</th><th>IWRS</th><th>操作</th></tr></thead>
+        <thead><tr><th>試驗案編號</th><th>Protocol No.</th><th>主要試驗用藥</th><th>試驗案狀態</th><th>藥管費</th><th>藥品儲位</th><th>IWRS</th><th>操作</th></tr></thead>
         <tbody id="trialBody"></tbody>
       </table>
     </div>
@@ -2499,7 +2527,7 @@ async function loadAll(){
    trials=rows;setConnection(true);render();
  }catch(e){
    setConnection(false,e.message);
-   $("trialBody").innerHTML='<tr><td colspan="5" class="empty connection-error">無法讀取資料：'+esc(e.message)+'</td></tr>';
+   $("trialBody").innerHTML='<tr><td colspan="8" class="empty connection-error">無法讀取資料：'+esc(e.message)+'</td></tr>';
    $("count").textContent="";
  }finally{setBusy(false)}
 }
@@ -2644,7 +2672,8 @@ function render(){
  let rows=trials.filter(t=>{
    const loc=(t.locations||[]).map(x=>(x.storage_type||"")+" "+(x.location||"")).join(" ");
    const iw=(t.iwrs||[]).map(x=>(x.iwrs_name||"")+" "+(x.login_id||"")).join(" ");
-   const matchesText=!q||[t.serial_no,t.protocol_no,t.main_drug,t.trial_status,t.dispensing,t.ddi,loc,iw].join(" ").toLowerCase().includes(q);
+   const feeText=getFeeListState(t).text;
+   const matchesText=!q||[t.serial_no,t.protocol_no,t.main_drug,t.trial_status,feeText,t.dispensing,t.ddi,loc,iw].join(" ").toLowerCase().includes(q);
    const matchesStatus=!statusFilter||t.trial_status===statusFilter;
    return matchesText&&matchesStatus;
  });
@@ -2673,7 +2702,7 @@ function render(){
  $("count").textContent="共 "+rows.length+" / "+trials.length+" 件";
 
  if(!pageRows.length){
-   $("trialBody").innerHTML='<tr><td colspan="7" class="empty">目前沒有符合條件的試驗案</td></tr>';
+   $("trialBody").innerHTML='<tr><td colspan="8" class="empty">目前沒有符合條件的試驗案</td></tr>';
    renderPagination(0,1);
    return;
  }
@@ -2684,12 +2713,14 @@ function render(){
    const iw=firstIwrs?esc(firstIwrs.iwrs_name||"—"):"—";
    const status=t.trial_status||"未進行";
    const statusClass=status==="進行中"?"status-active":status==="結案"?"status-closed":"status-notstarted";
+   const feeState=getFeeListState(t);
 
    return '<tr>'+
      '<td><strong>'+esc(t.serial_no||"—")+'</strong></td>'+
      '<td>'+esc(t.protocol_no||"—")+'</td>'+
      '<td>'+esc(t.main_drug||"—")+'</td>'+
      '<td><span class="status-pill '+statusClass+'">'+esc(status)+'</span></td>'+
+     '<td><span class="fee-list-badge '+feeState.className+'">'+esc(feeState.text)+'</span></td>'+
      '<td class="mobile-storage-cell"><div class="mobile-storage-value">'+locs+'</div></td>'+
      '<td class="mobile-iwrs-cell"><span class="mobile-iwrs-value">'+iw+'</span></td>'+
      '<td>'+
@@ -3178,6 +3209,14 @@ function getFeeReminderState(t){
  const days=Math.ceil((nextPeriod.start-now)/86400000);
  if(days>=0&&days<=feeReminderDays&&!paymentExistsForYear(t,nextYear))return {className:"warn",text:"第 "+nextYear+" 年度將於 "+days+" 天後續繳"};
  return {className:"ok",text:"本年度已有繳交紀錄"};
+}
+function getFeeListState(t){
+ const state=getFeeReminderState(t);
+ if(state.className==="ok")return {className:"ok",text:"已繳"};
+ if(state.className==="warn")return {className:"warn",text:"即將續繳"};
+ if(state.className==="due")return {className:"due",text:"待繳"};
+ if(!t.first_drug_received_date||getCurrentFeeYear(t)===0)return {className:"off",text:"尚未起算"};
+ return {className:"off",text:"未啟用"};
 }
 function renderFeeDetail(t){
  const currentYear=getCurrentFeeYear(t),state=getFeeReminderState(t);

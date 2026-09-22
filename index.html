@@ -3199,10 +3199,10 @@ function getCurrentFeeYear(t,today=new Date()){
 }
 function paymentExistsForYear(t,year){return (t.fee_payments||[]).some(p=>Number(p.fee_year)===year)}
 function getFeeReminderState(t){
+ if(!t.management_fee_reminder)return {className:"off",text:"不適用"};
  if(!t.first_drug_received_date)return {className:"off",text:"尚未進藥，不計算"};
  const currentYear=getCurrentFeeYear(t);
  if(currentYear===0)return {className:"off",text:"尚未到首次進藥日"};
- if(!t.management_fee_reminder)return {className:"off",text:"未啟用提醒"};
  if(!paymentExistsForYear(t,currentYear))return {className:"due",text:"第 "+currentYear+" 年度待繳"};
  const nextYear=currentYear+1,nextPeriod=getFeePeriod(t,nextYear);
  const now=new Date();now.setHours(0,0,0,0);
@@ -3215,8 +3215,9 @@ function getFeeListState(t){
  if(state.className==="ok")return {className:"ok",text:"已繳"};
  if(state.className==="warn")return {className:"warn",text:"即將續繳"};
  if(state.className==="due")return {className:"due",text:"待繳"};
+ if(!t.management_fee_reminder)return {className:"off",text:"不適用"};
  if(!t.first_drug_received_date||getCurrentFeeYear(t)===0)return {className:"off",text:"尚未起算"};
- return {className:"off",text:"未啟用"};
+ return {className:"off",text:"不適用"};
 }
 function renderFeeDetail(t){
  const currentYear=getCurrentFeeYear(t),state=getFeeReminderState(t);

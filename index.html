@@ -2507,31 +2507,89 @@ async function api(path,options={}){
   return data;
 }
 
+// 效能優化：關聯資料採批次載入；不更動 Supabase Schema、RLS 或原有資料欄位。
+const TRIAL_SELECT="trial_id,protocol_no,serial_no,main_drug,trial_status,dispensing,ddi,management_fee_first_year,management_fee_renewal,first_drug_received_date,management_fee_reminder";
+const LOCATION_SELECT="location_id,trial_id,storage_type,location";
+const TRIAL_IWRS_SELECT="trial_iwrs_id,trial_id,account_id";
+const FEE_SELECT="payment_id,trial_id,fee_year,payment_date,amount_paid,notes";
+
+// PostgREST 常見單次回傳上限為 1000 筆；分頁可避免大量資料被截斷。
+async function fetchAllPages(path,pageSize=1000){
+  const all=[];
+  for(let offset=0;;offset+=pageSize){
+    const separator=path.includes("?")?"&":"?";
+    const page=await api(path+separator+"limit="+pageSize+"&offset="+offset);
+    if(!Array.isArray(page))throw new Error("查詢回傳格式不正確："+path);
+    all.push(...page);
+    if(page.length<pageSize)break;
+  }
+  return all;
+}
+function joinTrialRelations(rows,locations,relations,payments,accounts=iwrsAccounts,options=iwrsOptions){
+  const locationMap=new Map(),relationMap=new Map(),paymentMap=new Map();
+  for(const x of locations){if(!locationMap.has(x.trial_id))locationMap.set(x.trial_id,[]);locationMap.get(x.trial_id).push(x)}
+  for(const x of relations){if(!relationMap.has(x.trial_id))relationMap.set(x.trial_id,[]);relationMap.get(x.trial_id).push(x)}
+  for(const x of payments){if(!paymentMap.has(x.trial_id))paymentMap.set(x.trial_id,[]);paymentMap.get(x.trial_id).push(x)}
+  const accountMap=new Map(accounts.map(x=>[x.account_id,x]));
+  const optionMap=new Map(options.map(x=>[x.iwrs_id,x]));
+  for(const t of rows){
+    t.locations=locationMap.get(t.trial_id)||[];
+    t.fee_payments=paymentMap.get(t.trial_id)||[];
+    t.iwrs=(relationMap.get(t.trial_id)||[]).map(x=>{
+      const a=accountMap.get(x.account_id);
+      const found=a?optionMap.get(a.iwrs_id):null;
+      return {...x,iwrs_id:a?a.iwrs_id:null,login_id:a?a.login_id:"",password:a?a.password:"",
+        iwrs_name:found?found.iwrs_name:"未知 IWRS",iwrs_url:found?found.iwrs_url||"":""};
+    });
+  }
+  return rows;
+}
 async function loadAll(){
- setBusy(true);
- try{
-   iwrsOptions=await api("/iwrs?select=iwrs_id,iwrs_name,iwrs_url&order=iwrs_name.asc");
-   iwrsAccounts=await api("/iwrs_accounts?select=account_id,iwrs_id,login_id,password&order=iwrs_id.asc,login_id.asc");
-   const rows=await api("/trials?select=trial_id,protocol_no,serial_no,main_drug,trial_status,dispensing,ddi,management_fee_first_year,management_fee_renewal,first_drug_received_date,management_fee_reminder&order=trial_id.asc");
-   for(const t of rows){
-     t.locations=await api("/trial_locations?select=location_id,storage_type,location&trial_id=eq."+encodeURIComponent(t.trial_id)+"&order=location_id.asc");
-     t.iwrs=await api("/trial_iwrs?select=trial_iwrs_id,account_id&trial_id=eq."+encodeURIComponent(t.trial_id)+"&order=trial_iwrs_id.asc");
-     t.fee_payments=await api("/trial_management_fee_payments?select=payment_id,trial_id,fee_year,payment_date,amount_paid,notes&trial_id=eq."+encodeURIComponent(t.trial_id)+"&order=fee_year.asc,payment_date.asc,payment_id.asc");
-     t.iwrs.forEach(x=>{
-       const a=iwrsAccounts.find(a=>a.account_id===x.account_id);
-       const found=a?iwrsOptions.find(i=>i.iwrs_id===a.iwrs_id):null;
-       x.iwrs_id=a?a.iwrs_id:null; x.login_id=a?a.login_id:""; x.password=a?a.password:"";
-       x.iwrs_name=found?found.iwrs_name:"未知 IWRS"; x.iwrs_url=found?found.iwrs_url||"":"";
-     });
-   }
-   trials=rows;setConnection(true);render();
- }catch(e){
-   setConnection(false,e.message);
-   $("trialBody").innerHTML='<tr><td colspan="8" class="empty connection-error">無法讀取資料：'+esc(e.message)+'</td></tr>';
-   $("count").textContent="";
- }finally{setBusy(false)}
+  const started=performance.now();
+  setBusy(true);
+  try{
+    const [options,accounts,rows,locations,relations,payments]=await Promise.all([
+      fetchAllPages("/iwrs?select=iwrs_id,iwrs_name,iwrs_url&order=iwrs_name.asc,iwrs_id.asc"),
+      fetchAllPages("/iwrs_accounts?select=account_id,iwrs_id,login_id,password&order=iwrs_id.asc,login_id.asc,account_id.asc"),
+      fetchAllPages("/trials?select="+TRIAL_SELECT+"&order=trial_id.asc"),
+      fetchAllPages("/trial_locations?select="+LOCATION_SELECT+"&order=location_id.asc"),
+      fetchAllPages("/trial_iwrs?select="+TRIAL_IWRS_SELECT+"&order=trial_iwrs_id.asc"),
+      fetchAllPages("/trial_management_fee_payments?select="+FEE_SELECT+"&order=fee_year.asc,payment_date.asc,payment_id.asc")
+    ]);
+    iwrsOptions=options;
+    iwrsAccounts=accounts;
+    trials=joinTrialRelations(rows,locations,relations,payments,accounts,options);
+    setConnection(true);
+    render();
+    console.info("[TrialDatabase] 全部資料載入完成："+trials.length+" 案，"+(performance.now()-started).toFixed(0)+" ms");
+    return true;
+  }catch(e){
+    setConnection(false,e.message);
+    $("trialBody").innerHTML='<tr><td colspan="8" class="empty connection-error">無法讀取資料：'+esc(e.message)+'</td></tr>';
+    $("count").textContent="";
+    console.error("[TrialDatabase] 全部資料載入失敗",e);
+    return false;
+  }finally{setBusy(false)}
 }
 
+// 儲存單一試驗案後只讀取該案，保留其餘清單快取。
+async function refreshOneTrial(id){
+  const started=performance.now();
+  const filter="&trial_id=eq."+encodeURIComponent(id);
+  const [rows,locations,relations,payments]=await Promise.all([
+    api("/trials?select="+TRIAL_SELECT+filter),
+    api("/trial_locations?select="+LOCATION_SELECT+filter+"&order=location_id.asc"),
+    api("/trial_iwrs?select="+TRIAL_IWRS_SELECT+filter+"&order=trial_iwrs_id.asc"),
+    api("/trial_management_fee_payments?select="+FEE_SELECT+filter+"&order=fee_year.asc,payment_date.asc,payment_id.asc")
+  ]);
+  if(rows.length!==1)throw new Error("無法取得已儲存的試驗案資料。");
+  const updated=joinTrialRelations(rows,locations,relations,payments)[0];
+  const index=trials.findIndex(x=>String(x.trial_id)===String(id));
+  if(index<0)trials.push(updated);else trials[index]=updated;
+  render();
+  console.info("[TrialDatabase] 單案更新完成："+(performance.now()-started).toFixed(0)+" ms");
+  return updated;
+}
 
 function csvEscape(v){
  const s=String(v??"");
@@ -3157,7 +3215,16 @@ async function saveTrial(){
   }
   if(locations.length)await api("/trial_locations",{method:"POST",headers:{"Prefer":"return=minimal"},body:JSON.stringify(locations.map(x=>({trial_id,...x})))});
   if(iwrsRows.length)await api("/trial_iwrs",{method:"POST",headers:{"Prefer":"return=minimal"},body:JSON.stringify(iwrsRows.map(x=>({trial_id,account_id:x.account_id})))});
-  closeModal();await loadAll();showDetail(trial_id);showBanner("資料已成功儲存到 Supabase。","ok");
+  closeModal();
+  // 寫入已成功；重新讀取失敗時不可誤報為「儲存失敗」。
+  try{
+    await refreshOneTrial(trial_id);
+    showDetail(trial_id);
+    showBanner("資料已成功儲存到 Supabase。","ok");
+  }catch(refreshError){
+    console.error("[TrialDatabase] 儲存成功，但更新畫面失敗",refreshError);
+    showBanner("資料已儲存，但畫面更新失敗，請按「重新整理」確認："+refreshError.message,"error");
+  }
  }catch(e){showBanner("儲存失敗："+e.message,"error")}finally{setBusy(false)}
 }
 

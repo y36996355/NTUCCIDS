@@ -1999,6 +1999,42 @@ img,svg{max-width:100%;height:auto}
   .fee-management-modal-box{width:calc(100vw - 16px)!important;max-height:94vh}
   .detail-head>div{display:flex;flex-wrap:wrap;gap:6px}
 }
+
+/* IRB 欄位：九欄清單、縮減工作臺外距與保留手機卡片模式 */
+@media(min-width:1181px){
+  .container{max-width:1800px!important;padding-left:12px!important;padding-right:12px!important}
+  .workspace-grid{grid-template-columns:minmax(0,1.5fr) minmax(390px,1fr)!important;gap:12px!important}
+}
+.workspace-list-card table{table-layout:fixed!important}
+.workspace-list-card th,.workspace-list-card td{min-width:0}
+.workspace-list-card th:nth-child(1),.workspace-list-card td:nth-child(1){width:11%!important}
+.workspace-list-card th:nth-child(2),.workspace-list-card td:nth-child(2){width:12%!important}
+.workspace-list-card th:nth-child(3),.workspace-list-card td:nth-child(3){width:11%!important}
+.workspace-list-card th:nth-child(4),.workspace-list-card td:nth-child(4){width:12%!important}
+.workspace-list-card th:nth-child(5),.workspace-list-card td:nth-child(5){width:10%!important}
+.workspace-list-card th:nth-child(6),.workspace-list-card td:nth-child(6){width:10%!important}
+.workspace-list-card th:nth-child(7),.workspace-list-card td:nth-child(7){width:16%!important}
+.workspace-list-card th:nth-child(8),.workspace-list-card td:nth-child(8){width:9%!important}
+.workspace-list-card th:nth-child(9),.workspace-list-card td:nth-child(9){width:9%!important}
+.workspace-list-card td:nth-child(8){white-space:normal!important;overflow:visible!important}
+.workspace-list-card td:nth-child(9){overflow-wrap:anywhere}
+@media(max-width:760px){
+  .workspace-list-card td:nth-child(1)::before{content:"試驗案編號"!important}
+  .workspace-list-card td:nth-child(2)::before{content:"Protocol No."!important}
+  .workspace-list-card td:nth-child(3)::before{content:"IRB 編號"!important}
+  .workspace-list-card td:nth-child(4)::before{content:"主要試驗用藥"!important}
+  .workspace-list-card td:nth-child(5)::before{content:"試驗案狀態"!important}
+  .workspace-list-card td:nth-child(6)::before{content:"藥管費"!important}
+  .workspace-list-card td:nth-child(7)::before{content:"藥品儲位"!important}
+  .workspace-list-card td:nth-child(8)::before{content:"IWRS"!important;display:initial!important}
+  .workspace-list-card td:nth-child(9)::before{content:""!important;display:none!important}
+  .workspace-list-card th:nth-child(n),.workspace-list-card td:nth-child(n){width:100%!important;max-width:100%!important}
+  .workspace-list-card td:nth-child(8){display:block!important;border-top:0!important;margin-top:0!important}
+  .workspace-list-card td:nth-child(9){display:flex!important;gap:6px!important;padding-top:8px!important;border-top:1px solid #E4D9CE!important;margin-top:5px!important}
+  .workspace-list-card td:nth-child(9) .link-btn{flex:1!important}
+  .workspace-list-card td:nth-child(7){white-space:normal!important;overflow:visible!important}
+  .workspace-list-card td.mobile-iwrs-cell{border-top:0!important;margin-top:0!important}
+}
 </style>
 </head>
 <body class="logged-out">
@@ -2058,7 +2094,7 @@ img,svg{max-width:100%;height:auto}
   <div class="toolbar">
     <div class="toolbar-main">
       <div class="search-wrap">
-        <input id="keyword" placeholder="搜尋 Protocol、試驗案編號、主要試驗用藥、IWRS、儲位、注意事項…">
+        <input id="keyword" placeholder="搜尋 Protocol、IRB 編號、試驗案編號、主要試驗用藥、IWRS、儲位、注意事項…">
       </div>
       <div class="toolbar-actions">
         <button class="btn-primary" onclick="openModal()">＋ 新增試驗案</button>
@@ -2088,7 +2124,7 @@ img,svg{max-width:100%;height:auto}
     <div class="summary"><strong>試驗案清單</strong><span id="count"></span></div>
     <div class="table-wrap">
       <table>
-        <thead><tr><th>試驗案編號</th><th>Protocol No.</th><th>主要試驗用藥</th><th>試驗案狀態</th><th>藥管費</th><th>藥品儲位</th><th>IWRS</th><th>操作</th></tr></thead>
+        <thead><tr><th>試驗案編號</th><th>Protocol No.</th><th>IRB 編號</th><th>主要試驗用藥</th><th>試驗案狀態</th><th>藥管費</th><th>藥品儲位</th><th>IWRS</th><th>操作</th></tr></thead>
         <tbody id="trialBody"></tbody>
       </table>
     </div>
@@ -2112,7 +2148,7 @@ img,svg{max-width:100%;height:auto}
   <div class="detail-body">
     <div class="detail-grid">
       <div class="detail-item"><label>試驗案編號</label><div class="value" id="dSerial"></div></div>
-      <div class="detail-item"><label>Protocol No.</label><div class="value" id="dProtocol"></div></div><div class="detail-item"><label>主要試驗用藥</label><div class="value" id="dMainDrug"></div></div><div class="detail-item"><label>試驗案狀態</label><div class="value" id="dTrialStatus"></div></div>
+      <div class="detail-item"><label>Protocol No.</label><div class="value" id="dProtocol"></div></div><div class="detail-item"><label>IRB 編號</label><div class="value" id="dIrbNo"></div></div><div class="detail-item"><label>主要試驗用藥</label><div class="value" id="dMainDrug"></div></div><div class="detail-item"><label>試驗案狀態</label><div class="value" id="dTrialStatus"></div></div>
     </div>
     <div class="detail-section"><h3>藥品儲位</h3><div class="detail-text" id="dLocations"></div></div>
     <div class="detail-section"><h3>IWRS</h3><div class="detail-text" id="dIwrs"></div></div>
@@ -2201,7 +2237,7 @@ img,svg{max-width:100%;height:auto}
     <input type="hidden" id="editId">
     <div class="form-grid">
       <div class="field"><label>試驗案編號 *</label><input id="serialNo"></div>
-      <div class="field"><label>Protocol No. *</label><input id="protocolNo"></div><div class="field"><label>主要試驗用藥</label><input id="mainDrug" placeholder="例如：Osimertinib"></div><div class="field"><label>試驗案狀態</label><select id="trialStatus"><option>未進行</option><option>進行中</option><option>結案</option></select></div>
+      <div class="field"><label>Protocol No. *</label><input id="protocolNo"></div><div class="field"><label>IRB 編號</label><input id="irbNo" placeholder="請輸入 IRB 編號"></div><div class="field"><label>主要試驗用藥</label><input id="mainDrug" placeholder="例如：Osimertinib"></div><div class="field"><label>試驗案狀態</label><select id="trialStatus"><option>未進行</option><option>進行中</option><option>結案</option></select></div>
 
       <div class="field full"><div class="form-section-title">藥品管理費</div></div>
       <div class="field"><label>第一年藥管費</label><input id="managementFeeFirstYear" type="number" min="0" step="1" placeholder="例如：45000"></div>
@@ -2508,7 +2544,7 @@ async function api(path,options={}){
 }
 
 // 效能優化：關聯資料採批次載入；不更動 Supabase Schema、RLS 或原有資料欄位。
-const TRIAL_SELECT="trial_id,protocol_no,serial_no,main_drug,trial_status,dispensing,ddi,management_fee_first_year,management_fee_renewal,first_drug_received_date,management_fee_reminder";
+const TRIAL_SELECT="trial_id,protocol_no,irb_no,serial_no,main_drug,trial_status,dispensing,ddi,management_fee_first_year,management_fee_renewal,first_drug_received_date,management_fee_reminder";
 const LOCATION_SELECT="location_id,trial_id,storage_type,location";
 const TRIAL_IWRS_SELECT="trial_iwrs_id,trial_id,account_id";
 const FEE_SELECT="payment_id,trial_id,fee_year,payment_date,amount_paid,notes";
@@ -2565,7 +2601,7 @@ async function loadAll(){
     return true;
   }catch(e){
     setConnection(false,e.message);
-    $("trialBody").innerHTML='<tr><td colspan="8" class="empty connection-error">無法讀取資料：'+esc(e.message)+'</td></tr>';
+    $("trialBody").innerHTML='<tr><td colspan="9" class="empty connection-error">無法讀取資料：'+esc(e.message)+'</td></tr>';
     $("count").textContent="";
     console.error("[TrialDatabase] 全部資料載入失敗",e);
     return false;
@@ -2603,13 +2639,13 @@ function downloadTextFile(filename, content, mime){
  setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 function exportTrialCsv(){
- const rows=[["試驗案編號","Protocol No.","主要試驗用藥","試驗案狀態","第一年藥管費","第二年起藥管費","首次進藥日期","提醒繳交","藥品儲位","IWRS","Login ID","IWRS 網址","覆核與調劑注意事項","藥品交互作用"]];
+ const rows=[["試驗案編號","Protocol No.","IRB 編號","主要試驗用藥","試驗案狀態","第一年藥管費","第二年起藥管費","首次進藥日期","提醒繳交","藥品儲位","IWRS","Login ID","IWRS 網址","覆核與調劑注意事項","藥品交互作用"]];
  trials.forEach(t=>{
    const loc=(t.locations||[]).map(x=>(x.storage_type||"")+"｜"+(x.location||"")).join("；");
    const iwrsNames=(t.iwrs||[]).map(x=>x.iwrs_name||"").join("；");
    const logins=(t.iwrs||[]).map(x=>x.login_id||"").join("；");
    const urls=(t.iwrs||[]).map(x=>x.iwrs_url||"").join("；");
-   rows.push([t.serial_no||"",t.protocol_no||"",t.main_drug||"",t.trial_status||"未進行",t.management_fee_first_year??"",t.management_fee_renewal??"",t.first_drug_received_date||"",t.management_fee_reminder?"是":"否",loc,iwrsNames,logins,urls,t.dispensing||"",t.ddi||""]);
+   rows.push([t.serial_no||"",t.protocol_no||"",t.irb_no||"",t.main_drug||"",t.trial_status||"未進行",t.management_fee_first_year??"",t.management_fee_renewal??"",t.first_drug_received_date||"",t.management_fee_reminder?"是":"否",loc,iwrsNames,logins,urls,t.dispensing||"",t.ddi||""]);
  });
  const csv="\ufeff"+rows.map(r=>r.map(csvEscape).join(",")).join("\r\n");
  const d=new Date().toISOString().slice(0,10);
@@ -2625,6 +2661,7 @@ function exportFullBackup(){
    trials:trials.map(t=>({
      trial_id:t.trial_id,
      protocol_no:t.protocol_no,
+     irb_no:t.irb_no,
      serial_no:t.serial_no,
      main_drug:t.main_drug,
      trial_status:t.trial_status,
@@ -2731,7 +2768,7 @@ function render(){
    const loc=(t.locations||[]).map(x=>(x.storage_type||"")+" "+(x.location||"")).join(" ");
    const iw=(t.iwrs||[]).map(x=>(x.iwrs_name||"")+" "+(x.login_id||"")).join(" ");
    const feeText=getFeeListState(t).text;
-   const matchesText=!q||[t.serial_no,t.protocol_no,t.main_drug,t.trial_status,feeText,t.dispensing,t.ddi,loc,iw].join(" ").toLowerCase().includes(q);
+   const matchesText=!q||[t.serial_no,t.protocol_no,t.irb_no,t.main_drug,t.trial_status,feeText,t.dispensing,t.ddi,loc,iw].join(" ").toLowerCase().includes(q);
    const matchesStatus=!statusFilter||t.trial_status===statusFilter;
    return matchesText&&matchesStatus;
  });
@@ -2760,7 +2797,7 @@ function render(){
  $("count").textContent="共 "+rows.length+" / "+trials.length+" 件";
 
  if(!pageRows.length){
-   $("trialBody").innerHTML='<tr><td colspan="8" class="empty">目前沒有符合條件的試驗案</td></tr>';
+   $("trialBody").innerHTML='<tr><td colspan="9" class="empty">目前沒有符合條件的試驗案</td></tr>';
    renderPagination(0,1);
    return;
  }
@@ -2776,6 +2813,7 @@ function render(){
    return '<tr>'+
      '<td><strong>'+esc(t.serial_no||"—")+'</strong></td>'+
      '<td>'+esc(t.protocol_no||"—")+'</td>'+
+     '<td>'+esc(t.irb_no||"—")+'</td>'+
      '<td>'+esc(t.main_drug||"—")+'</td>'+
      '<td><span class="status-pill '+statusClass+'">'+esc(status)+'</span></td>'+
      '<td><span class="fee-list-badge '+feeState.className+'">'+esc(feeState.text)+'</span></td>'+
@@ -3185,23 +3223,23 @@ function openModal(id=null){
  $("locationEditor").innerHTML="";$("iwrsEditor").innerHTML="";
  if(id){
   const t=trials.find(x=>x.trial_id===id);if(!t)return;
-  $("serialNo").value=t.serial_no||"";$("protocolNo").value=t.protocol_no||"";$("mainDrug").value=t.main_drug||"";$("trialStatus").value=t.trial_status||"未進行";$("dispensing").value=t.dispensing||"";$("ddi").value=t.ddi||"";
+  $("serialNo").value=t.serial_no||"";$("protocolNo").value=t.protocol_no||"";$("irbNo").value=t.irb_no||"";$("mainDrug").value=t.main_drug||"";$("trialStatus").value=t.trial_status||"未進行";$("dispensing").value=t.dispensing||"";$("ddi").value=t.ddi||"";
   $("managementFeeFirstYear").value=t.management_fee_first_year??"";$("managementFeeRenewal").value=t.management_fee_renewal??"";$("firstDrugReceivedDate").value=t.first_drug_received_date||"";$("managementFeeReminder").value=t.management_fee_reminder?"true":"false";
   (t.locations||[]).forEach(x=>addLocationRow(x.storage_type||"",x.location||""));
   (t.iwrs||[]).forEach(x=>addIwrsRow(x.account_id));
- }else{$("serialNo").value="";$("protocolNo").value="";$("mainDrug").value="";$("trialStatus").value="未進行";$("dispensing").value="";$("ddi").value="";$("managementFeeFirstYear").value="";$("managementFeeRenewal").value="";$("firstDrugReceivedDate").value="";$("managementFeeReminder").value="false"}
+ }else{$("serialNo").value="";$("protocolNo").value="";$("irbNo").value="";$("mainDrug").value="";$("trialStatus").value="未進行";$("dispensing").value="";$("ddi").value="";$("managementFeeFirstYear").value="";$("managementFeeRenewal").value="";$("firstDrugReceivedDate").value="";$("managementFeeReminder").value="false"}
 }
 function closeModal(){$("modal").classList.remove("show")}
 
 async function saveTrial(){
- const serial_no=$("serialNo").value.trim(),protocol_no=$("protocolNo").value.trim(),main_drug=$("mainDrug").value.trim(),trial_status=$("trialStatus").value,dispensing=$("dispensing").value.trim(),ddi=$("ddi").value.trim();
+ const serial_no=$("serialNo").value.trim(),protocol_no=$("protocolNo").value.trim(),irb_no=$("irbNo").value.trim(),main_drug=$("mainDrug").value.trim(),trial_status=$("trialStatus").value,dispensing=$("dispensing").value.trim(),ddi=$("ddi").value.trim();
  const management_fee_first_year=$("managementFeeFirstYear").value===""?null:Number($("managementFeeFirstYear").value),management_fee_renewal=$("managementFeeRenewal").value===""?null:Number($("managementFeeRenewal").value),first_drug_received_date=$("firstDrugReceivedDate").value||null,management_fee_reminder=$("managementFeeReminder").value==="true";
  const locations=getLocations(),iwrsRows=getIwrs(),editId=$("editId").value;
  if(!serial_no||!protocol_no){alert("請至少填寫：試驗案編號、Protocol No.");return}
  if(iwrsRows.some(x=>!x.account_id)){alert("請選擇 IWRS 帳號。");return}
  setBusy(true);
  try{
-  let trial_id;const payload={serial_no,protocol_no,main_drug:main_drug||null,trial_status,dispensing,ddi,management_fee_first_year,management_fee_renewal,first_drug_received_date,management_fee_reminder};
+  let trial_id;const payload={serial_no,protocol_no,irb_no:irb_no||null,main_drug:main_drug||null,trial_status,dispensing,ddi,management_fee_first_year,management_fee_renewal,first_drug_received_date,management_fee_reminder};
   if(editId){
    const result=await api("/trials?trial_id=eq."+encodeURIComponent(editId),{method:"PATCH",headers:{"Prefer":"return=representation"},body:JSON.stringify(payload)});
    if(!result||!result.length)throw new Error("更新後沒有取得試驗案資料。請檢查 RLS UPDATE / SELECT policy。");
@@ -3362,7 +3400,7 @@ async function deleteFeePayment(paymentId){
 
 function showDetail(id){
  const t=trials.find(x=>x.trial_id===id);if(!t)return;currentDetailId=id;$("detailView").classList.remove("detail-empty");
- $("detailTitle").textContent=(t.serial_no||t.protocol_no||"試驗案")+"｜詳細資料";$("dSerial").textContent=t.serial_no||"—";$("dProtocol").textContent=t.protocol_no||"—";$("dMainDrug").textContent=t.main_drug||"—";const ds=t.trial_status||"未進行";const dc=ds==="進行中"?"status-active":ds==="結案"?"status-closed":"status-notstarted";$("dTrialStatus").innerHTML='<span class="status-pill '+dc+'">'+esc(ds)+"</span>";
+ $("detailTitle").textContent=(t.serial_no||t.protocol_no||"試驗案")+"｜詳細資料";$("dSerial").textContent=t.serial_no||"—";$("dProtocol").textContent=t.protocol_no||"—";$("dIrbNo").textContent=t.irb_no||"—";$("dMainDrug").textContent=t.main_drug||"—";const ds=t.trial_status||"未進行";const dc=ds==="進行中"?"status-active":ds==="結案"?"status-closed":"status-notstarted";$("dTrialStatus").innerHTML='<span class="status-pill '+dc+'">'+esc(ds)+"</span>";
  const loc=sortedLocations(t.locations);$("dLocations").innerHTML=loc.length?'<div class="grid-display location"><div class="lh">儲存方式</div><div class="lh">儲位</div>'+loc.map(x=>'<div>'+esc(x.storage_type||"—")+'</div><div>'+esc(x.location||"—")+'</div>').join("")+'</div>':"目前尚未設定藥品儲位。";
  const iw=t.iwrs||[];$("dIwrs").innerHTML=iw.length?'<div class="grid-display iwrs"><div class="lh">IWRS</div><div class="lh">Login ID</div><div class="lh">Password</div><div class="lh">網址</div>'+iw.map(x=>{
  const safeUrl=(x.iwrs_url||"").trim();
